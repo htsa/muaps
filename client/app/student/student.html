@@ -7,10 +7,10 @@
 
 
   <form class="thing-form">
-    <label>importer un fichier  {{onglet}} </label>
+    <label>importer un fichier  json </label>
     <p class="input-group">
-      
-      <input type="text">
+
+
       <input type="file" ngf-select ng-model="$ctrl.file" name="file">
       <span class="input-group-btn">
         <button type="submit" class="btn btn-primary" ng-click="$ctrl.addFile()">Ajouter le fichier</button>
@@ -24,30 +24,90 @@
     <input type="text" ng-model="$ctrl.nameFile">
     <button type="submit" class="btn btn-primary" ng-click="$ctrl.ChargerFichier()">Medor</button>
 </div>
-
+<!--
 <div class="container">
   <div class="row">
     <p class="col-lg-2" ng-click="$ctrl.onglet ='student'">liste des étudiants</p>
     <p class="col-lg-2" ng-click="$ctrl.onglet ='option'">liste des options</p>
   </div>
   <div class="row">
-    <div class = "col-lg-9">
-    <ul class="nav nav-tabs nav-stacked col-md-3 col-lg-4 col-sm-6" ng-if="$ctrl.onglet =='student'"ng-repeat="student in $ctrl.awesomeStudent">
-      <li><a uib-tooltip="{{student.extra_case}}">{{student.nom}} {{student.prenom}} </a></li>
-    </ul>
-
-    <ul class="nav nav-tabs nav-stacked col-md-3 col-lg-6 col-sm-6" ng-if="$ctrl.onglet =='option'" ng-repeat="choice in $ctrl.awesomeChoice">
-      <li> <a>{{choice.nom}} {{student.prenom}} </a>
-        <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="option in choice.options">
-          <li> <a>{{option.nom}} {{option.place_min}} {{option.place_maxi}} </a></li>
-      </li>
-
+    <div class="col-lg-9">
+      <ul class="nav nav-tabs nav-stacked col-md-3 col-lg-12 col-sm-6" ng-if="$ctrl.onglet =='student'" ng-repeat="student in $ctrl.awesomeStudent">
+        <li ng-style="student.extra_case != 'rien' && {'background-color': 'red'}"><a uib-tooltip="{{student.extra_case}}">{{student.nom}} {{student.prenom}} </a></li>
       </ul>
+
+      <ul class="nav nav-tabs nav-stacked col-md-3 col-lg-1 col-sm-6" ng-if="$ctrl.onglet =='option'" ng-repeat="choice in $ctrl.awesomeChoice">
+        <li> <a>{{choice.nom}} coucou </a>
+          <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-12 col-sm-6" ng-repeat="option in choice.options">
+            <li> <a uib-tooltip="place min :{{option.place_min}}   place max : {{option.place_maxi}} ">{{option.nom}}  </a></li>
+        </li>
+
+        </ul>
     </div>
     <div class="col-lg-3"> ici les futurs infos </div>
   </div>
-</div>
+</div> -->
+
+<table ng-if="$ctrl.onglet=='valide'">
+
+  <thead>
+    <tr>
+      <th class= "centre" colspan="2"> informartions étudiants </th>
+      <th class = "centre" ng-repeat="choice in $ctrl.awesomeChoice |orderBy:'nom'" colspan="{{choice.options.length}}"> {{choice.nom}} </th>
+    </tr>
+
+    <tr>
+      <th>Nom</th>
+      <th>Prénom</th>
+
+        <th class="parasite" ng-repeat-start="choice in $ctrl.awesomeChoice |orderBy:'nom'"> </th>
+        <th ng-repeat-end ng-repeat="option in choice.options |orderBy:'nom'"> <span uib-tooltip="place mini : {{option.place_min}} place maxi : {{option.place_maxi}}"> {{option.nom}} </span> </th>
+     
+    </tr>
+  </thead>
+
+  <tr ng-repeat="student in $ctrl.awesomeStudent" ng-style="student.extra_case != 'rien' && {'background-color': 'yellow'}" >
+    <td > <span uib-tooltip="{{student.extra_case}}"> {{student.nom}}  </span></td>
+    <td> <span uib-tooltip="{{student.extra_case}}"> {{student.prenom}} </span> </td>
+   <!-- <th  ng-repeat="con in student.consultation |orderBy:['id_choix','id_option']"> 
+      <span ng-if="con.arguments !== undefined"uib-tooltip="preference : {{con.preference}} argument : {{con.arguments}}" class = "argument"> {{con.bids}} {{con.id_option}} </span>
+      <span ng-if="con.arguments == undefined"uib-tooltip="preference : {{con.preference}} "> {{con.bids}} {{con.id_option}} </span>
+      </th> -->
+      
+  <th class ="parasite"  ng-repeat-start="con in student.consultation |orderBy:['id_choix','id_option']"> </th>
+ <th ng-if="con.arguments !== undefined" class ="argument" > 
+    <span uib-tooltip=' preference : {{con.preference}}  argument : {{con.arguments}} ' class = "argument"> {{con.bids}}  </span>
+     </th>
+<th ng-if="con.arguments == undefined" ng-repeat-end> 
+  <span uib-tooltip="preference : {{con.preference}} "> {{con.bids}}   </span>
+</th>
+<!--
+        <th ng-if="con.arguments !== undefined" class ="argument"  ng-repeat="con in student.consultation |orderBy:['id_choix','id_option']" > 
+      <span uib-tooltip="preference : {{con.preference}} argument : {{con.arguments}}" class = "argument"> {{con.bids}} {{con.id_option}} </span>
+      </th>
+    <th ng-if="con.arguments == undefined" ng-repeat="con in student.consultation |orderBy:['id_choix','id_option']" > 
+       <span uib-tooltip="preference : {{con.preference}} "> {{con.bids}} {{con.id_option}} </span>
+      </th> -->
+    
+   
+  </tr>
 
 
 
+</table>
 
+<ul dnd-list="list">
+    <!-- The dnd-draggable directive makes an element draggable and will
+         transfer the object that was assigned to it. If an element was
+         dragged away, you have to remove it from the original list
+         yourself using the dnd-moved attribute -->
+    <li ng-repeat="item in list"
+        dnd-draggable="item"
+        dnd-moved="list.splice($index, 1)"
+        dnd-effect-allowed="move"
+        dnd-selected="models.selected = item"
+        ng-class="{'selected': models.selected === item}"
+        >
+        {{item.label}}
+    </li>
+</ul>

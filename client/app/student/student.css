@@ -25,3 +25,22 @@
 .navbar-text {
   margin-left: 15px;
 }
+
+table {
+border: medium solid #000000;
+width: 100%;
+text-align: center;
+}
+td, th {
+border: thin solid #6495ed;
+text-align: center;
+width: 5%;
+}
+
+.parasite {
+  display: none;
+}
+
+.argument{
+  background-color: Chartreuse ;
+}

@@ -9,9 +9,14 @@ export class NavbarComponent {
     state: 'main'
   },
   {
-    title:"Etudiant",
+    title:"Importation de fichiers",
     state: 'student'
-  }];
+  },
+  {
+    title : "requete",
+    state : "request"
+  }
+  ];
 
   isCollapsed = true;
 

@@ -14,7 +14,7 @@ export class StudentController {
     this.socket = socket;
     this.$scope = $scope;
     this.Upload = Upload;
-    this.onglet = "student";
+    this.onglet = "";
 
     $scope.$on('$destroy', function() {
       socket.unsyncUpdates('thing');
@@ -54,12 +54,14 @@ ChargerFichier(){
       .then(response => {
       this.awesomeStudent = response.data.etudiants;
       this.awesomeChoice = response.data.Choix;
-      console.log(this.onglet);
+      this.onglet="valide";
   });
 }
 
 
 }
+
+
 
 export default angular.module('miuapsbisApp.student', [uiRouter])
   .config(routing)

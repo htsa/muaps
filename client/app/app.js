@@ -27,11 +27,13 @@ import constants from './app.constants';
 import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
 import student from "./student/student.component";
+import request from "./request/request.component";
+import 'angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js';
 
 import './app.css';
 
-angular.module('miuapsbisApp', [ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter,
-  uiBootstrap, _Auth, account, admin, navbar, footer, main, constants, socket, util, student,ngFileUpload
+angular.module('miuapsbisApp', [ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, 'dndLists',
+  uiBootstrap, _Auth, account, admin, navbar, footer, main, constants, socket, util, student,ngFileUpload, request
 ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {

@@ -1,4 +1,4 @@
-{
+﻿{
 	"etudiants": [
 		{
 			"nom": "Cellier",
@@ -11,6 +11,18 @@
 			"prenom": "Mireille",
 			"id": "id_mireille",
 			"extra_case": "rien"
+		},
+		{
+			"nom": "Boue",
+			"prenom": "Melaine",
+			"id": "id_melaine",
+			"extra_case": "rien"
+		},
+		{
+			"nom": "Sahraoui",
+			"prenom": "Hedi-Théo",
+			"id": "id_hedi-theo",
+			"extra_case": "un peu lent d'esprit"
 		}
 	],
 	"Choix": [
@@ -47,6 +59,42 @@
 					"id": "id_ia",
 					"place_min": 0,
 					"place_maxi": 25
+				}
+			]
+		},
+		{
+			"nom": "Miage",
+			"id": "id_miage",
+			"options": [
+				{
+					"nom": "Web semantique",
+					"id": "id_ws",
+					"place_min": 10,
+					"place_maxi": 20
+				},
+				{
+					"nom": "Securite des bases de données",
+					"id": "id_sdbd",
+					"place_min": 0,
+					"place_maxi": 20
+				}
+			]
+		},
+		{
+			"nom": "Miage_gestion",
+			"id": "id_miage",
+			"options": [
+				{
+					"nom": "Méthode de prevision à court terme",
+					"id": "id_MPC",
+					"place_min": 0,
+					"place_maxi": 25
+				},
+				{
+					"nom": "gestion de production",
+					"id": "id_gp",
+					"place_min": 8,
+					"place_maxi": 20
 				}
 			]
 		}
@@ -86,7 +134,6 @@
 				"je ne veux pas suivre ce module toutes mes amies sont en IA"
 			],
 			"preference": 2
-		},
-		
+		}
 	]
 }
