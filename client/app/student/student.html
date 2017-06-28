@@ -1,28 +1,28 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
-      <h1 class="page-header"> importation et visualisation de fichier:</h1>
+      <h1 class="page-header"> importation and file visualization </h1>
     </div>
   </div>
 
 
-  <form class="thing-form">
-    <label>importer un fichier  json </label>
+  <form class="thing-form cadre">
+    <label> select json file </label>
     <p class="input-group">
 
 
       <input type="file" ngf-select ng-model="$ctrl.file" name="file">
       <span class="input-group-btn">
-        <button type="submit" class="btn btn-primary" ng-click="$ctrl.addFile()">Ajouter le fichier</button>
+        <button type="submit" class="btn btn-primary" ng-click="$ctrl.addFile()">Add file</button>
       </span>
     </p>
 
   </form>
 
-  <form>
-    <label> nom d'un fichier entrer auparavant </label>
+  <form class='cadre'>
+    <label> File name previously entered </label>
     <input type="text" ng-model="$ctrl.nameFile">
-    <button type="submit" class="btn btn-primary" ng-click="$ctrl.ChargerFichier()">Medor</button>
+    <button type="submit" class="btn btn-primary" ng-click="$ctrl.ChargerFichier()">Go</button>
 </div>
 <!--
 <div class="container">
@@ -57,8 +57,8 @@
     </tr>
 
     <tr>
-      <th>Nom</th>
-      <th>Prénom</th>
+      <th>Last name</th>
+      <th>First name</th>
 
         <th class="parasite" ng-repeat-start="choice in $ctrl.awesomeChoice |orderBy:'nom'"> </th>
         <th ng-repeat-end ng-repeat="option in choice.options |orderBy:'nom'"> <span uib-tooltip="place mini : {{option.place_min}} place maxi : {{option.place_maxi}}"> {{option.nom}} </span> </th>
@@ -66,9 +66,9 @@
     </tr>
   </thead>
 
-  <tr ng-repeat="student in $ctrl.awesomeStudent" ng-style="student.extra_case != 'rien' && {'background-color': 'yellow'}" >
-    <td > <span uib-tooltip="{{student.extra_case}}"> {{student.nom}}  </span></td>
-    <td> <span uib-tooltip="{{student.extra_case}}"> {{student.prenom}} </span> </td>
+  <tr ng-repeat="student in $ctrl.awesomeStudent"  >
+    <td ng-style="student.extra_case != 'rien' && {'background-color': 'yellow'}" > <span uib-tooltip="{{student.extra_case}}" > {{student.nom}}  </span></td>
+    <td ng-style="student.extra_case != 'rien' && {'background-color': 'yellow'}"> <span uib-tooltip="{{student.extra_case}}"> {{student.prenom}} </span> </td>
    <!-- <th  ng-repeat="con in student.consultation |orderBy:['id_choix','id_option']"> 
       <span ng-if="con.arguments !== undefined"uib-tooltip="preference : {{con.preference}} argument : {{con.arguments}}" class = "argument"> {{con.bids}} {{con.id_option}} </span>
       <span ng-if="con.arguments == undefined"uib-tooltip="preference : {{con.preference}} "> {{con.bids}} {{con.id_option}} </span>

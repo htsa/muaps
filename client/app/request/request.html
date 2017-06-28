@@ -1,0 +1,86 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header"> systeme de requete</h1>
+    </div>
+  </div>
+
+
+  <form>
+    <label> File name previously entered </label>
+    <input type="text" ng-model="$ctrl.nameFile">
+    <button type="submit" class="btn btn-primary" ng-click="$ctrl.ChargerFichier()">Medor</button>
+</div>
+
+
+
+
+
+<div class="col-md-8">
+  <div class="row">
+    <div ng-repeat="(listName, listbis) in $ctrl.models.lists" class="col-md-6">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">List  {{listName}} </h3>
+        </div>
+        <ul dnd-list="listbis.people"
+        dnd-allowed-types="listbis.allowedTypes">
+          <!-- The dnd-draggable directive makes an element draggable and will
+         transfer the object that was assigned to it. If an element was
+         dragged away, you have to remove it from the original list
+         yourself using the dnd-moved attribute -->
+          <li ng-repeat="item in listbis.people" dnd-draggable="item"  dnd-type="item.type" dnd-moved="listbis.people.splice($index, 1)" dnd-effect-allowed="move" dnd-selected="models.selected = item"
+            ng-class="{'selected': models.selected === item}">
+            {{item.nom}} {{item.prenom}} et {{item.type}} 
+            <span ng-repeat="petit in item.consultation"> <br> {{petit.id_option}} a pour mise {{petit.bids}}  et preference {{petit.preference}} le choix est {{petit.id_choix}}</span>
+          </li>
+        </ul>
+        
+        <button ng-click="get()">Go!</button>
+      </div>
+    </div>
+  </div>
+
+  <div view-source="simple"></div>
+
+</div>
+
+<div class="col-md-4">
+  <div class="row">
+    <div ng-repeat="(listName, listbis) in $ctrl.models_second.lists" class="col-md-6">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">List  {{listName}} </h3>
+        </div>
+        <ul dnd-list="listbis.people"
+        dnd-allowed-types="listbis.allowedTypes">
+          <!-- The dnd-draggable directive makes an element draggable and will
+         transfer the object that was assigned to it. If an element was
+         dragged away, you have to remove it from the original list
+         yourself using the dnd-moved attribute -->
+          <li ng-repeat="item in listbis.people" dnd-draggable="item"  dnd-type="item.type" dnd-moved="listbis.people.splice($index, 1)" dnd-effect-allowed="move" dnd-selected="models.selected = item"
+            ng-class="{'selected': models.selected === item}">
+            {{item.nom}} {{item.prenom}} et {{item.type}} 
+            <span ng-repeat="petit in item.consultation"> <br> {{petit.id_option}} a pour mise {{petit.bids}}  et preference {{petit.preference}} le choix est {{petit.id_choix}}</span>
+          </li>
+        </ul>
+        
+        <button ng-click="get()">Go!</button>
+      </div>
+    </div>
+  </div>
+
+  <div view-source="simple"></div>
+
+</div>
+
+  
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Generated Model</h3>
+            </div>
+            <div class="panel-body">
+                <pre class="code">{{modelAsJson}}</pre>
+            </div>
+        </div>
+   
