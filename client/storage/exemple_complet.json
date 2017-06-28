@@ -1,0 +1,141 @@
+﻿{
+	"etudiants": [
+		{
+			"nom": "Cellier",
+			"prenom": "Peggy",
+			"id": "id_peggy",
+			"extra_case": "rien"
+		},
+		{
+			"nom": "Ducasse",
+			"prenom": "Mireille",
+			"id": "id_mireille",
+			"extra_case": "rien"
+		},
+		{
+			"nom": "Boue",
+			"prenom": "Melaine",
+			"id": "id_melaine",
+			"extra_case": "rien"
+		},
+		{
+			"nom": "Sahraoui",
+			"prenom": "Hedi-Théo",
+			"id": "id_hedi-theo",
+			"extra_case": "un peu lent d'esprit"
+		}
+		
+	],
+	"Choix": [
+		{
+			"nom": "parcours",
+			"id": "id_parcours",
+			"options": [
+				{
+					"nom": "securite base de donnée",
+					"id": "id_sdb",
+					"place_min": 0,
+					"place_maxi": 20
+				},
+				{
+					"nom": "Systeme large echelle",
+					"id": "id_sle",
+					"place_min": 5,
+					"place_maxi": 20
+				}
+			]
+		},
+		{
+			"nom": "module_1",
+			"id": "id_module_1",
+			"options": [
+				{
+					"nom": "Image",
+					"id": "id_image",
+					"place_min": 3,
+					"place_maxi": 18
+				},
+				{
+					"nom": "IA",
+					"id": "id_ia",
+					"place_min": 0,
+					"place_maxi": 25
+				}
+			]
+		}
+		{
+			"nom": "Miage",
+			"id": "id_miage",
+			"options": [
+				{
+					"nom": "Web semantique",
+					"id": "id_ws",
+					"place_min": 10,
+					"place_maxi": 20
+				},
+				{
+					"nom": "Securite des bases de données",
+					"id": "id_sdbd",
+					"place_min": 0,
+					"place_maxi": 20
+				}
+			]
+		},
+		{
+			"nom": "Miage_gestion",
+			"id": "id_miage",
+			"options": [
+				{
+					"nom": "Méthode de prevision à court terme",
+					"id": "id_MPC",
+					"place_min": 0,
+					"place_maxi": 25
+				},
+				{
+					"nom": "gestion de production",
+					"id": "id_gp",
+					"place_min": 8,
+					"place_maxi": 20
+				}
+			]
+		}
+	],
+	"Consultations": [
+		{
+			"id_etudiant": "id_peggy",
+			"id_choix": "id_module_1",
+			"id_option": "id_ia",
+			"bids": 8,
+			"arguments": [
+				"j'ai toujours voulu faire ca",
+				"A.I est mon film favori"
+			],
+			"preference": 1
+		},
+		{
+			"id_etudiant": "id_peggy",
+			"id_choix": "id_module_1",
+			"id_option": "id_image",
+			"bids": 0,
+			"preference": 2
+		},
+		{
+			"id_etudiant": "id_mireille",
+			"id_choix": "id_module_1",
+			"id_option": "id_ia",
+			"bids": 7,
+			"preference": 1
+		},
+		{
+			"id_etudiant": "id_mireille",
+			"id_choix": "id_module_1",
+			"id_option": "id_image",
+			"bids": 1,
+			"arguments": [
+				"je ne veux pas suivre ce module toutes mes amies sont en IA"
+			],
+			"preference": 2
+		}
+		
+	]
+}
