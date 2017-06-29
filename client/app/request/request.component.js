@@ -3,38 +3,32 @@ import uiRouter from 'angular-ui-router';
 import routing from './request.route';
 
 export class RequestController {
-  awesomeStudent = [];
-  awesomeChoice = [];
-  newThing = '';
-  onglet = 'student';
-  student = {
-    selected: null,
-    lists: { "student1": [], "student2": [] }
-  };
+  awesomeStudent = ["etudiant"];
+  
 
   /*@ngInject*/
   constructor($http, $scope, socket, Upload) {
+    this.$scope = $scope;
     this.$http = $http;
     this.socket = socket;
     this.$scope = $scope;
     this.Upload = Upload;
-    this.onglet = "student";
+    this.awesomeChoice = [];
+    this.onglet = "general";
      this.models = {
-        
-       // lists: {"A": [], "B": [],"C":[]}
-       
     };
-    $scope.model = this.models;
-
+        $scope.model = this.models;
     this.models_second = {
-
     };
 
-    /* this.model = {
-       dropzone : {
-       }
-     }
-    */
+    $scope.data = {
+      test : "blabla",
+      student : this.awesomeStudent,
+      choice : this.awesomeChoice,
+      liste_gauche : this.models,
+      liste_droite : this.models_second,
+    };
+
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('thing');
     });
@@ -44,14 +38,7 @@ export class RequestController {
     }, true);
   }
 
-  /* $onInit() {
- 
-    this.$http.get('./storage/exemple.json')
-       .then(response => {
-       this.awesomeStudent = response.data.etudiants;
-       console.log(this.awesomeStudent);
-   });
- }*/
+
 
   addFile() {
 
@@ -60,14 +47,44 @@ export class RequestController {
       this.Upload.upload({
         url: 'api/things/upload',
         data: { file: this.file }
-      }).then(this.ChargerFichier());
+      }).then(this.ChargerVersion());
     }
     else {
       alert("ce n'est pas un fichier json");
     }
   }
 
+  ChargerVersion(){
+     if (!/json$/.test(this.nameFile)) {
+      this.nameFile = this.nameFile + ".json";
+    }
+    this.$http.get('./storage/'+ this.nameFile).then(response =>{
+      this.awesomeStudent = response.data.student;
+      this.awesomeChoice = response.data.choice;
+      this.models = response.data.liste_gauche;
+      this.models_second = response.data.liste_droite;
+    })
+  }
 
+  saveJSON = function () {
+			
+      console.log(this.nameFileOut);
+      this.$scope.data.choice = this.awesomeChoice;
+      this.$scope.data.student = this.awesomeStudent;
+      this.$scope.data.liste_gauche = this.models;
+      this.$scope.data.liste_droite = this.models_second;
+			var bla = angular.toJson(this.$scope.data);
+      if (this.nameFileOut ==undefined){
+        alert("tu n'as pas renseigne le nom d'un fichier");
+        return
+      }
+      var nom_du_fichier = this.nameFileOut + '.json';
+			var blob = new Blob([bla], { type:"application/json;charset=utf-8;" });			
+			var downloadLink = angular.element('<a></a>');
+                        downloadLink.attr('href',window.URL.createObjectURL(blob));
+                        downloadLink.attr('download', nom_du_fichier);
+			downloadLink[0].click();
+		};
 
   ChargerFichier() {
     if (!/json$/.test(this.nameFile)) {
@@ -97,49 +114,10 @@ export class RequestController {
             this.models.lists[provisoire].people.push({nom : this.awesomeStudent[j].nom, prenom : this.awesomeStudent[j].prenom , type : provisoire , consultation : provisoire_consultation});
           }
         }
-/*
-        this.models.lists.A = {allowedTypes: ["a"],people:[]};
-        this.models.lists.B = {allowedTypes: ["b"],people:[]};
-        this.models.lists.C = {allowedTypes: ["c"],people:[]};
-         for (var i = 0; i < this.awesomeStudent.length; ++i) {
-        this.models.lists.A.people.push({nom : this.awesomeStudent[i].nom, prenom : this.awesomeStudent[i].prenom , type : "a"});
-        this.models.lists.B.people.push({nom : this.awesomeStudent[i].nom, prenom : this.awesomeStudent[i].prenom , type : "b"});
-        this.models.lists.C.people.push({nom : this.awesomeStudent[i].nom, prenom : this.awesomeStudent[i].prenom , type : "c"});
-    }*/
-        console.log(this.models_second);
-       /*  this.student.lists.student1 = this.awesomeStudent;
-        this.student.lists.student2 = response.data.etudiants;
-        for (var i = 0; i < this.awesomeChoice.length; i++) {
-          this.model.dropzone.this.awesomeChoice[i].name = [];
 
-        }
-        console.log(this.awesomeChoice);
-        for (var i = 0; i < this.awesomeChoice.length; i++) {
+        
 
-          var test = this.awesomeChoice[i].nom;
-          var tout = this.awesomeChoice[i].options;
-          this.model.dropzone[test] = [];
-          this.model.dropzone[test].push({ label: test, allowedTypes: ["container"], choix: [] });
-          for (var j = 0; j < tout.length; j++) {
-            var testbis = tout[j].nom;
-            console.log("on passe dans a premiere boucle");
-            var merde = this.model.dropzone[test];
-            console.log(this.model.dropzone[test][0].choix);
-            // this.model.dropzone[test].push({type: "container", nom : testbis, allowedTypes:["container"]});
-            this.model.dropzone[test][0].choix.push({ nom: testbis, type: "container" });
-            console.log("on passe ds la deuxieme boucle");
-
-
-            console.log(this.model.dropzone[test]);
-          }
-
-          console.log(test);
-
-
-
-        }
-        this.modelsecond.student = response.data.etudiants;
-        */
+        
       });
   }
 

@@ -5,20 +5,47 @@
     </div>
   </div>
 
+<form class="thing-form cadre">
+    <label> select json file </label>
+    <p class="input-group">
+
+
+      <input type="file" ngf-select ng-model="$ctrl.file" name="file">
+      <span class="input-group-btn">
+        <button type="submit" class="btn btn-primary" ng-click="$ctrl.addFile()">Add file</button>
+      </span>
+    </p>
+
+  </form>
+
 
   <form>
     <label> File name previously entered </label>
     <input type="text" ng-model="$ctrl.nameFile">
     <button type="submit" class="btn btn-primary" ng-click="$ctrl.ChargerFichier()">Medor</button>
+    </form>
+
+     <form>
+    <label> File name previously entered </label>
+    <input type="text" ng-model="$ctrl.nameFile">
+    <button type="submit" class="btn btn-primary" ng-click="$ctrl.ChargerVersion()">Medorbis</button>
+    </form>
 </div>
 
+
+
+    <button type="button" ng-if="$ctrl.onglet != 'general'" ng-click="$ctrl.onglet ='general'">vue general</button>
+    <button type="button" ng-repeat="option in $ctrl.awesomeChoice" ng-click="$ctrl.onglet= option.nom" ng-if="$ctrl.onglet != option.nom"> {{option.nom}}  </button>
+  
+
+<p> vous avez choisis {{$ctrl.onglet}} </p>
 
 
 
 
 <div class="col-md-8">
   <div class="row">
-    <div ng-repeat="(listName, listbis) in $ctrl.models.lists" class="col-md-6">
+    <div ng-repeat="(listName, listbis) in $ctrl.models.lists" class="col-md-6" ng-if="$ctrl.onglet==listName || $ctrl.onglet=='general'">
       <div class="panel panel-info">
         <div class="panel-heading">
           <h3 class="panel-title">List  {{listName}} </h3>
@@ -35,19 +62,15 @@
             <span ng-repeat="petit in item.consultation"> <br> {{petit.id_option}} a pour mise {{petit.bids}}  et preference {{petit.preference}} le choix est {{petit.id_choix}}</span>
           </li>
         </ul>
-        
-        <button ng-click="get()">Go!</button>
       </div>
     </div>
   </div>
-
-  <div view-source="simple"></div>
 
 </div>
 
 <div class="col-md-4">
   <div class="row">
-    <div ng-repeat="(listName, listbis) in $ctrl.models_second.lists" class="col-md-6">
+    <div ng-repeat="(listName, listbis) in $ctrl.models_second.lists" class="col-md-6" ng-if="$ctrl.onglet==listName || $ctrl.onglet=='general'" >
       <div class="panel panel-info">
         <div class="panel-heading">
           <h3 class="panel-title">List  {{listName}} </h3>
@@ -65,22 +88,30 @@
           </li>
         </ul>
         
-        <button ng-click="get()">Go!</button>
       </div>
     </div>
   </div>
 
-  <div view-source="simple"></div>
 
-</div>
 
-  
+
+<div class"col-md-9">
+  <div class="row">
         <div class="panel panel-default">
-            <div class="panel-heading">
+            
                 <h3 class="panel-title">Generated Model</h3>
-            </div>
+           
             <div class="panel-body">
                 <pre class="code">{{modelAsJson}}</pre>
             </div>
         </div>
+   </div>
+   </div>
    
+
+   
+ <form>
+    <label> File name  </label>
+    <input type="text" ng-model="$ctrl.nameFileOut">
+    <a class="btn" ng-click="$ctrl.saveJSON()" ng-href="{{ url }}">Export to JSON</a>
+    </form>
