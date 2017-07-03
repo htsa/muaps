@@ -54,6 +54,37 @@ export class RequestController {
     }
   }
 
+Charger(){
+   if (!/json$/.test(this.nameFile)){
+    this.nameFile = this.nameFile + ".json";
+  }
+   this.$http.get('./storage/'+this.nameFile)
+      .then(res => {
+        console.log(res.data.test);
+        console.log(res.data.etudiants);
+        if( res.data.version == 1){
+          this.ChargerVersion();
+          console.log("version");
+        }
+        else {
+          this.ChargerFichier();
+          console.log("fichier");
+        }
+  });
+}  
+
+ChargerFichierbis(){
+  if (!/json$/.test(this.nameFile)){
+    this.nameFile = this.nameFile + ".json";
+  }
+   this.$http.get('./storage/'+this.nameFile)
+      .then(response => {
+      this.awesomeStudent = response.data.etudiants;
+      this.awesomeChoice = response.data.Choix;
+      this.onglet="valide";
+  });
+}
+
   ChargerVersion(){
      if (!/json$/.test(this.nameFile)) {
       this.nameFile = this.nameFile + ".json";
@@ -68,22 +99,42 @@ export class RequestController {
 
   saveJSON = function () {
 			
-      console.log(this.nameFileOut);
+      
+      this.$scope.data.version = 1;
       this.$scope.data.choice = this.awesomeChoice;
       this.$scope.data.student = this.awesomeStudent;
       this.$scope.data.liste_gauche = this.models;
       this.$scope.data.liste_droite = this.models_second;
 			var bla = angular.toJson(this.$scope.data);
-      if (this.nameFileOut ==undefined){
+     if (this.nameFileOut ==undefined){
         alert("tu n'as pas renseigne le nom d'un fichier");
         return
       }
       var nom_du_fichier = this.nameFileOut + '.json';
 			var blob = new Blob([bla], { type:"application/json;charset=utf-8;" });			
 			var downloadLink = angular.element('<a></a>');
-                        downloadLink.attr('href',window.URL.createObjectURL(blob));
+      var testici = window.URL.createObjectURL(blob);
+      console.log("1");
+          downloadLink.attr('href',testici);
+           console.log("2");
+                      //  downloadLink.attr('href',window.URL.createObjectURL(blob));
                         downloadLink.attr('download', nom_du_fichier);
+                         console.log("3");
 			downloadLink[0].click();
+      console.log("4");
+
+      console.log(blob);
+      this.nameFile = nom_du_fichier;
+      var aide_file = [blob];
+       console.log("5");
+      var fichier = new File(aide_file , nom_du_fichier);
+      console.log(fichier);
+       console.log("6");
+      this.Upload.upload({
+        url: 'api/things/upload',
+        data: { file: fichier }
+      })
+
 		};
 
   ChargerFichier() {

@@ -31,7 +31,7 @@ export class StudentController {
 }*/
 
 addFile(){
-   
+   console.log(this.file);
    if(/json$/.test(this.file.name)){
         this.nameFile = this.file.name;
         this.Upload.upload({
