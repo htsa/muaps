@@ -116,6 +116,8 @@ var storage = multer.diskStorage({
     
     filename: function (request, file, callback) {
       callback(null, file.originalname)
+      console.log("on essaye");
+      console.log(file.originalname)
     }
   });
 
@@ -151,6 +153,7 @@ export function filesUpload(req, res) {
   var upload = multer({storage: storage}).any();
 
   upload(req, res, function(err) {
+  
     if(err) {
       console.log(err);
       return;

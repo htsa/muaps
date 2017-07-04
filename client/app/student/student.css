@@ -30,6 +30,7 @@ table {
 border: medium solid #000000;
 width: 100%;
 text-align: center;
+top : 10%;
 }
 td, th {
 border: thin solid #6495ed;
@@ -43,4 +44,8 @@ width: 5%;
 
 .argument{
   background-color: Chartreuse ;
+}
+
+.cadre{
+border:1px solid black;
 }

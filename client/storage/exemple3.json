@@ -1,0 +1,203 @@
+{
+	"etudiants": [
+		{
+			"nom": "Cellier",
+			"prenom": "Peggy",
+			"id": "id_peggy",
+			"extra_case": "rien",
+			"consultation": [
+				{
+					"id_etudiant": "id_peggy",
+					"id_choix": "id_parcours",
+					"id_option": "id_sdb",
+					"bids": 2,
+					"preference": 2,
+					"arguments": [
+						"A notre epoque savoir proteger une bdd me semble tres important"
+					]
+				},
+				{
+					"id_etudiant": "id_peggy",
+					"id_choix": "id_module_1",
+					"id_option": "id_image",
+					"bids": 0,
+					"preference": 3,
+					"arguments" : [
+						"je ne peux pas faire cette option j'ai des problemes de visions"
+					]
+				},
+				{
+					"id_etudiant": "id_peggy",
+					"id_choix": "id_module_1",
+					"id_option": "id_ia",
+					"bids": 8,
+					"arguments": [
+						"j'ai toujours voulu faire ca",
+						"A.I est mon film favori"
+					],
+					"preference": 1
+				},
+				{
+					"id_etudiant": "id_peggy",
+					"id_choix": "id_parcours",
+					"id_option": "id_sle",
+					"bids": 0,
+					"preference": 4,
+					"arguments":[" j'ai le vertige :) "]
+				}
+			]
+		},
+		{
+			"nom": "Ducasse",
+			"prenom": "Mireille",
+			"id": "id_mireille",
+			"extra_case": "rien",
+			"consultation": [
+				{
+					"id_etudiant": "id_mireille",
+					"id_choix": "id_module_1",
+					"id_option": "id_ia",
+					"bids": 7,
+					"preference": 1
+				},
+				{
+					"id_etudiant": "id_mireille",
+					"id_choix": "id_module_1",
+					"id_option": "id_image",
+					"bids": 1,
+					"arguments": [
+						"je ne veux pas suivre ce module toutes mes amies sont en IA"
+					],
+					"preference": 2
+				},
+				{
+					"id_etudiant": "id_mireille",
+					"id_choix": "id_parcours",
+					"id_option": "id_slg",
+					"bids": 1,
+					"preference": 3
+				},{
+				"id_etudiant": "id_mireille",
+					"id_choix": "id_parcours",
+					"id_option": "id_sdb",
+					"bids": 1,
+					"preference": 4}
+			]
+		},
+		{
+			"nom": "Boue",
+			"prenom": "Melaine",
+			"id": "id_melaine",
+			"extra_case": "rien",
+			"consultation": [
+				{
+					"id_etudiant": "id_melaine",
+					"id_choix": "id_parcours",
+					"id_option": "id_sdb",
+					"bids": 0,
+					"preference": 3
+				},
+				{
+					"id_etudiant": "id_melaine",
+					"id_choix": "id_module_1",
+					"id_option": "id_image",
+					"bids": 6,
+					"preference": 1
+				},
+				{
+					"id_etudiant": "id_melaine",
+					"id_choix": "id_module_1",
+					"id_option": "id_ia",
+					"bids": 0,
+					"preference": 4
+				},
+				{
+					"id_etudiant": "id_melaine",
+					"id_choix": "id_parcours",
+					"id_option": "id_sle",
+					"bids": 4,
+					"preference": 2
+				}
+			]
+		},
+		{
+			"nom": "Sahraoui",
+			"prenom": "Hedi-Théo",
+			"id": "id_hedi-theo",
+			"extra_case": "un peu lent d'esprit",
+			"consultation": [
+				{
+					"id_etudiant": "id_htsa",
+					"id_choix": "id_parcours",
+					"id_option": "id_sdb",
+					"bids": 2,
+					"preference": 2
+				},
+				{
+					"id_etudiant": "id_htsa",
+					"id_choix": "id_module_1",
+					"id_option": "id_image",
+					"bids": 3,
+					"preference": 3
+				},
+				{
+					"id_etudiant": "id_htsa",
+					"id_choix": "id_module_1",
+					"id_option": "id_ia",
+					"bids": 3,
+					
+					"preference": 1
+				},
+				{
+					"id_etudiant": "id_htsa",
+					"id_choix": "id_parcours",
+					"id_option": "id_sle",
+					"bids": 2,
+					"preference": 4,
+					"arguments": [
+						"je sais pas trop ce que c'est"
+											]
+				}
+			]
+		}
+	],
+	"Choix": [
+		{
+			"nom": "parcours",
+			"id": "id_parcours",
+			"options": [
+				{
+					"nom": "base de donnée",
+					"id": "id_sdb",
+					"place_min": 0,
+					"place_maxi": 20
+				},
+				{
+					"nom": "Systeme large echelle",
+					"id": "id_sle",
+					"place_min": 5,
+					"place_maxi": 20
+				}
+			]
+		},
+		{
+			"nom": "module_1",
+			"id": "id_module_1",
+			"options": [
+				{
+					"nom": "Image",
+					"id": "id_image",
+					"place_min": 3,
+					"place_maxi": 18
+				},
+				{
+					"nom": "IA",
+					"id": "id_ia",
+					"place_min": 0,
+					"place_maxi": 25
+				}
+			]
+		}
+	],
+	"Consultations": []
+}
