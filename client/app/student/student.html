@@ -1,27 +1,27 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
-      <h1 class="page-header"> importation and file visualization </h1>
+      <h1 class="page-header"> Importation and file visualization </h1>
     </div>
   </div>
 
 
 
   <form class="thing-form cadre">
-    <label> select json file </label>
+    <label> Select new (json) file </label>
     <p class="input-group">
 
 
       <input type="file" ngf-select ng-model="$ctrl.file" name="file">
       <span class="input-group-btn">
-        <button type="submit" class="btn btn-primary" ng-click="$ctrl.addFile()">Add file</button>
+        <button  type="submit" class="btn btn-primary" ng-click="$ctrl.addFile()">Add file</button>
       </span>
     </p>
 
   </form>
 
   <form class='cadre'>
-    <label> File name previously entered </label>
+    <label> Select existing file</label>
     <input type="text" ng-model="$ctrl.nameFile">
     <button type="submit" class="btn btn-primary" ng-click="$ctrl.ChargerFichier()">Go</button>
     </form>

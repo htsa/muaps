@@ -9,11 +9,11 @@ export class NavbarComponent {
     state: 'main'
   },
   {
-    title:"Importation de fichiers",
+    title:"File management",
     state: 'student'
   },
   {
-    title : "requete",
+    title : "Request",
     state : "request"
   }
   ];
