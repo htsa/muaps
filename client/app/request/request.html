@@ -39,7 +39,7 @@
          transfer the object that was assigned to it. If an element was
          dragged away, you have to remove it from the original list
          yourself using the dnd-moved attribute -->
-          <li ng-repeat="item in listbis.people" dnd-draggable="item"  dnd-type="item.type" dnd-moved="listbis.people.splice($index, 1)" dnd-effect-allowed="move" dnd-selected="models.selected = item"
+          <li ng-repeat="item in listbis.people" dnd-draggable="item"  dnd-type="item.type" dnd-moved="listbis.people.splice($index, 1)" dnd-effect-allowed="copyLink" dnd-selected="models.selected = item"
             ng-class="{'selected': models.selected === item}">
             {{item.nom}} {{item.prenom}} et {{item.type}} 
             <span ng-repeat="petit in item.consultation"> <br> {{petit.id_option}} a pour mise {{petit.bids}}  et preference {{petit.preference}} le choix est {{petit.id_choix}}</span>
@@ -53,20 +53,34 @@
 
 <div class="col-md-4">
   <div class="row">
-    <div ng-repeat="(listName, listbis) in $ctrl.models_second.lists" class="col-md-6" ng-if="$ctrl.onglet==listName || $ctrl.onglet=='general'" >
+    <div ng-repeat="(listName, listbis) in $ctrl.models_second.lists" class="col-md-12" ng-if="$ctrl.onglet==listName || $ctrl.onglet=='general'" >
       <div class="panel panel-info">
         <div class="panel-heading">
           <h3 class="panel-title">Assignment  {{listName}} </h3>
         </div>
-        <ul dnd-list="listbis.people"
+        
+        <div ng-repeat ="listtris in listbis.choice"> {{listtris.nom}} 
+          <div ng-repeat="(containerName, contenu) in listtris.containers"> 
+            {{containerName}}
+            <ul dnd-list="contenu.people">
+              <li ng-repeat="item in contenu.people" dnd-draggable="item" dnd-type="item.type" dnd-moved="contenu.people.splice($index,1)" dnd-effect-allowed="copy" dnd-selected="models.selected = item"
+              ng-class="{'selected': models.selected === item}">
+              {{item.nom}} {{item.prenom}}  et <span ng-click="$ctrl.fcttest(item)"> {{item.test}} </span>
+              </li>
+            </ul>
+            
+          </div>
+        </div>
+
+        <ul ng-click="$ctrl.$fcttest()" dnd-list="listbis.people"
         dnd-allowed-types="listbis.allowedTypes">
           <!-- The dnd-draggable directive makes an element draggable and will
          transfer the object that was assigned to it. If an element was
          dragged away, you have to remove it from the original list
          yourself using the dnd-moved attribute -->
-          <li ng-repeat="item in listbis.people" dnd-draggable="item"  dnd-type="item.type" dnd-moved="listbis.people.splice($index, 1)" dnd-effect-allowed="move" dnd-selected="models.selected = item"
-            ng-class="{'selected': models.selected === item}">
-            {{item.nom}} {{item.prenom}} et {{item.type}} 
+          <li ng-repeat="item in listbis.people" ng-click="$ctrl.fcttest()" dnd-draggable="item"  dnd-type="item.type" dnd-moved="listbis.people.splice($index, 1)" dnd-effect-allowed="move" 
+           >
+            {{item.nom}} {{item.prenom}} et  
             <span ng-repeat="petit in item.consultation"> <br> {{petit.id_option}} a pour mise {{petit.bids}}  et preference {{petit.preference}} le choix est {{petit.id_choix}}</span>
           </li>
         </ul>
@@ -76,7 +90,7 @@
   </div>
 
 
-<
+<p ng-click = "$ctrl.fcttest()"> bla bla </p>
 
 <div class"col-md-9">
   <div class="row">

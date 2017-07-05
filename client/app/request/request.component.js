@@ -17,9 +17,10 @@ export class RequestController {
     this.onglet = "general";
      this.models = {
     };
-        $scope.model = this.models;
+       
     this.models_second = {
     };
+     $scope.model = this.models_second;
 
     $scope.data = {
       test : "blabla",
@@ -136,6 +137,11 @@ ChargerFichierbis(){
       })
 
 		};
+    
+    fcttest(param1){
+      param1.test = param1.test + 1;
+      console.log("pourquoi ?");
+    }
 
   ChargerFichier() {
     if (!/json$/.test(this.nameFile)) {
@@ -143,26 +149,45 @@ ChargerFichierbis(){
     }
     this.$http.get('./storage/' + this.nameFile)
       .then(response => {
-        this.awesomeStudent = response.data.etudiants;
-        this.awesomeChoice = response.data.Choix;
+        this.awesomeStudent = response.data.etudiants; // ensemble des étudiants du fichier
+        this.awesomeChoice = response.data.Choix; //  ensemble des choix avec leur options
         this.models.lists = {};
         this.models_second.lists = {};
         console.log(this.awesomeChoice);
         
-        for (var i = 0; i<this.awesomeChoice.length; ++i){
-          var provisoire = this.awesomeChoice[i].nom;
-          var id = this.awesomeChoice[i].id;
+        for (var i = 0; i<this.awesomeChoice.length; ++i){ // pour tout les choix
+          var provisoire = this.awesomeChoice[i].nom; // on met le nom du choix dans une variable
+          var id = this.awesomeChoice[i].id; // on met l id du choix 
           console.log(provisoire);
-          this.models.lists[provisoire] = {allowedTypes:[provisoire],people:[]};
-          this.models_second.lists[provisoire] = {allowedTypes: [provisoire],people: []};
-          for (var j = 0; j<this.awesomeStudent.length; ++j){
-            var provisoire_consultation = [];
+          var container = { bids :{
+            people:[]
+          },
+          argument : {
+            people : []
+          },
+          preference : {
+            people : []
+          },
+          dictator : {
+            people :[]
+          }
+        };
+        
+        for( var w = 0 ; w<this.awesomeChoice[i].options.length; w++){
+           this.awesomeChoice[i].options[w].containers = {};
+           this.awesomeChoice[i].options[w].containers = container;
+
+        }
+          this.models.lists[provisoire] = {allowedTypes:[provisoire],people:[]}; // on ajoute le choix en entré en disant que seul les individus du meme type peuvent venir, choix = parcours, module un etc
+          this.models_second.lists[provisoire] = {allowedTypes: [provisoire],people: [], choice : this.awesomeChoice[i].options}; // on fait la meme chose dans la liste de droite
+          for (var j = 0; j<this.awesomeStudent.length; ++j){ // pour tout les étudiants on va recuperer les valeurs pour chaque options.
+            var provisoire_consultation = []; 
             for (var w = 0; w<this.awesomeStudent[j].consultation.length; ++w){
               if (this.awesomeStudent[j].consultation[w].id_choix ==  id ){
                   provisoire_consultation.push(this.awesomeStudent[j].consultation[w])
               }
             }
-            this.models.lists[provisoire].people.push({nom : this.awesomeStudent[j].nom, prenom : this.awesomeStudent[j].prenom , type : provisoire , consultation : provisoire_consultation});
+            this.models.lists[provisoire].people.push({nom : this.awesomeStudent[j].nom,test: 1, prenom : this.awesomeStudent[j].prenom , type : provisoire , consultation : provisoire_consultation});
           }
         }
 
