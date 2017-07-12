@@ -73,7 +73,7 @@
 				{
 					"id_etudiant": "id_mireille",
 					"id_choix": "id_parcours",
-					"id_option": "id_slg",
+					"id_option": "id_sle",
 					"bids": 1,
 					"preference": 3
 				},{
@@ -123,7 +123,7 @@
 		{
 			"nom": "Sahraoui",
 			"prenom": "Hedi-Théo",
-			"id": "id_hedi-theo",
+			"id": "id_htsa",
 			"extra_case": "un peu lent d'esprit",
 			"consultation": [
 				{

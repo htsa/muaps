@@ -4,7 +4,7 @@ import routing from './request.route';
 
 export class RequestController {
   awesomeStudent = ["etudiant"];
-  
+
 
   /*@ngInject*/
   constructor($http, $scope, socket, Upload) {
@@ -14,20 +14,26 @@ export class RequestController {
     this.$scope = $scope;
     this.Upload = Upload;
     this.awesomeChoice = [];
+    this.choice = {};
+    this.student = {};
     this.onglet = "general";
-     this.models = {
+    this.models = {
     };
-       
+
     this.models_second = {
     };
-     $scope.model = this.models_second;
+    $scope.model = this.models_second;
+
+
+    this.binaire = [];
+
 
     $scope.data = {
-      test : "blabla",
-      student : this.awesomeStudent,
-      choice : this.awesomeChoice,
-      liste_gauche : this.models,
-      liste_droite : this.models_second,
+      test: "blabla",
+      student: this.awesomeStudent,
+      choice: this.awesomeChoice,
+      liste_gauche: this.models,
+      liste_droite: this.models_second,
     };
 
     $scope.$on('$destroy', function () {
@@ -37,6 +43,46 @@ export class RequestController {
     $scope.$watch('model', function (model) {
       $scope.modelAsJson = angular.toJson(model, true);
     }, true);
+
+
+
+    $scope.lists = [
+      {
+        label: "Men",
+        allowedTypes: ['1'],
+        max: 4,
+        people: [
+          { name: "Boby", type: "1" },
+          { name: "Charlie", type: "1" },
+          { name: "Dave", type: "1" },
+        ]
+      },
+      {
+        label: "Women",
+        allowedTypes: ['2'],
+        max: 4,
+        people: [
+          { name: "Alice", type: "2" },
+          { name: "Eve", type: "2" },
+          { name: "Peggy", type: "2" }
+        ]
+      },
+      {
+        label: "People",
+        allowedTypes: ['1', '2'],
+        max: 6,
+        people: [
+          { name: "Frank", type: "1" },
+          { name: "Mallory", type: "2" },
+          { name: "Alex", type: "unknown" },
+          { name: "Oscar", type: "1" },
+          { name: "Wendy", type: "2" }
+        ]
+      }
+    ];
+
+
+
   }
 
 
@@ -55,15 +101,15 @@ export class RequestController {
     }
   }
 
-Charger(){
-   if (!/json$/.test(this.nameFile)){
-    this.nameFile = this.nameFile + ".json";
-  }
-   this.$http.get('./storage/'+this.nameFile)
+  Charger() {
+    if (!/json$/.test(this.nameFile)) {
+      this.nameFile = this.nameFile + ".json";
+    }
+    this.$http.get('./storage/' + this.nameFile)
       .then(res => {
         console.log(res.data.test);
         console.log(res.data.etudiants);
-        if( res.data.version == 1){
+        if (res.data.version == 1) {
           this.ChargerVersion();
           console.log("version");
         }
@@ -71,26 +117,42 @@ Charger(){
           this.ChargerFichier();
           console.log("fichier");
         }
-  });
-}  
-
-ChargerFichierbis(){
-  if (!/json$/.test(this.nameFile)){
-    this.nameFile = this.nameFile + ".json";
+      });
   }
-   this.$http.get('./storage/'+this.nameFile)
-      .then(response => {
-      this.awesomeStudent = response.data.etudiants;
-      this.awesomeChoice = response.data.Choix;
-      this.onglet="valide";
-  });
-}
 
-  ChargerVersion(){
-     if (!/json$/.test(this.nameFile)) {
+  changement = function (item) {
+    console.log("changement");
+    console.log(item);
+    if (item.type == "1") {
+      item.type = "2";
+      item.name = "serieux";
+      console.log("on part d un 1");
+      console.log(item);
+      console.log("putain");
+    }
+    else {
+      item.type = "1";
+      console.log("on part d un 2");
+    }
+  };
+
+  ChargerFichierbis() {
+    if (!/json$/.test(this.nameFile)) {
       this.nameFile = this.nameFile + ".json";
     }
-    this.$http.get('./storage/'+ this.nameFile).then(response =>{
+    this.$http.get('./storage/' + this.nameFile)
+      .then(response => {
+        this.awesomeStudent = response.data.etudiants;
+        this.awesomeChoice = response.data.Choix;
+        this.onglet = "valide";
+      });
+  }
+
+  ChargerVersion() {
+    if (!/json$/.test(this.nameFile)) {
+      this.nameFile = this.nameFile + ".json";
+    }
+    this.$http.get('./storage/' + this.nameFile).then(response => {
       this.awesomeStudent = response.data.student;
       this.awesomeChoice = response.data.choice;
       this.models = response.data.liste_gauche;
@@ -99,50 +161,79 @@ ChargerFichierbis(){
   }
 
   saveJSON = function () {
-			
-      
-      this.$scope.data.version = 1;
-      this.$scope.data.choice = this.awesomeChoice;
-      this.$scope.data.student = this.awesomeStudent;
-      this.$scope.data.liste_gauche = this.models;
-      this.$scope.data.liste_droite = this.models_second;
-			var bla = angular.toJson(this.$scope.data);
-     if (this.nameFileOut ==undefined){
-        alert("tu n'as pas renseigne le nom d'un fichier");
-        return
-      }
-      var nom_du_fichier = this.nameFileOut + '.json';
-			var blob = new Blob([bla], { type:"application/json;charset=utf-8;" });			
-			var downloadLink = angular.element('<a></a>');
-      var testici = window.URL.createObjectURL(blob);
-      console.log("1");
-          downloadLink.attr('href',testici);
-           console.log("2");
-                      //  downloadLink.attr('href',window.URL.createObjectURL(blob));
-                        downloadLink.attr('download', nom_du_fichier);
-                         console.log("3");
-			downloadLink[0].click();
-      console.log("4");
 
-      console.log(blob);
-      this.nameFile = nom_du_fichier;
-      var aide_file = [blob];
-       console.log("5");
-      var fichier = new File(aide_file , nom_du_fichier);
-      console.log(fichier);
-       console.log("6");
-      this.Upload.upload({
-        url: 'api/things/upload',
-        data: { file: fichier }
-      })
 
-		};
-    
-    fcttest(param1){
-      param1.test = param1.test + 1;
-      console.log("pourquoi ?");
+    this.$scope.data.version = 1;
+    this.$scope.data.choice = this.awesomeChoice;
+    this.$scope.data.student = this.awesomeStudent;
+    this.$scope.data.liste_gauche = this.models;
+    this.$scope.data.liste_droite = this.models_second;
+    var bla = angular.toJson(this.$scope.data);
+    if (this.nameFileOut == undefined) {
+      alert("tu n'as pas renseigne le nom d'un fichier");
+      return
     }
+    var nom_du_fichier = this.nameFileOut + '.json';
+    var blob = new Blob([bla], { type: "application/json;charset=utf-8;" });
+    var downloadLink = angular.element('<a></a>');
+    var testici = window.URL.createObjectURL(blob);
+    console.log("1");
+    downloadLink.attr('href', testici);
+    console.log("2");
+    //  downloadLink.attr('href',window.URL.createObjectURL(blob));
+    downloadLink.attr('download', nom_du_fichier);
+    console.log("3");
+    downloadLink[0].click();
+    console.log("4");
 
+    console.log(blob);
+    this.nameFile = nom_du_fichier;
+    var aide_file = [blob];
+    console.log("5");
+    var fichier = new File(aide_file, nom_du_fichier);
+    console.log(fichier);
+    console.log("6");
+    this.Upload.upload({
+      url: 'api/things/upload',
+      data: { file: fichier }
+    })
+
+  };
+
+  fcttest(param1) {
+    param1.test = param1.test + 1;
+    console.log("pourquoi ?");
+  }
+  fctstart(item) { // ne pas utiliser dnd-start
+    console.log(item);
+    console.log("commencer");
+  }
+  fctend(item) { // modifie l'objet de base.
+    item.test = 2;
+    console.log(item);
+    console.log("fini");
+  }
+
+  fctinsert(item) { // modifie l'objet creer.
+    item.test = 3;
+    console.log(item)
+    console.log("insertion");
+  }
+  /*
+  fctbinaire(nbchoix){
+    var bin = "";
+    var compteur = 0;
+    var compteur_max = 2^nbchoix;
+  
+  for( var i =0; i<nbchoix ; i++){
+    bin = bin +"0";
+  }
+  
+    while(compteur < ){
+  
+    }
+  }
+  */
   ChargerFichier() {
     if (!/json$/.test(this.nameFile)) {
       this.nameFile = this.nameFile + ".json";
@@ -153,53 +244,148 @@ ChargerFichierbis(){
         this.awesomeChoice = response.data.Choix; //  ensemble des choix avec leur options
         this.models.lists = {};
         this.models_second.lists = {};
+        console.log("le choix");
         console.log(this.awesomeChoice);
-        
-        for (var i = 0; i<this.awesomeChoice.length; ++i){ // pour tout les choix
+
+        for (var i = 0; i < this.awesomeChoice.length; ++i) { // pour tout les choix
           var provisoire = this.awesomeChoice[i].nom; // on met le nom du choix dans une variable
           var id = this.awesomeChoice[i].id; // on met l id du choix 
-          console.log(provisoire);
-          var container = { bids :{
-            people:[]
-          },
-          argument : {
-            people : []
-          },
-          preference : {
-            people : []
-          },
-          dictator : {
-            people :[]
-          }
-        };
-        
-        for( var w = 0 ; w<this.awesomeChoice[i].options.length; w++){
-           this.awesomeChoice[i].options[w].containers = {};
-           this.awesomeChoice[i].options[w].containers = container;
+          //console.log(provisoire);
+          var container = {
+            bids: {
+              people: []
+            },
+            argument: {
+              people: []
+            },
+            preference: {
+              people: []
+            },
+            dictator: {
+              people: []
+            }
+          };
 
-        }
-          this.models.lists[provisoire] = {allowedTypes:[provisoire],people:[]}; // on ajoute le choix en entré en disant que seul les individus du meme type peuvent venir, choix = parcours, module un etc
-          this.models_second.lists[provisoire] = {allowedTypes: [provisoire],people: [], choice : this.awesomeChoice[i].options}; // on fait la meme chose dans la liste de droite
-          for (var j = 0; j<this.awesomeStudent.length; ++j){ // pour tout les étudiants on va recuperer les valeurs pour chaque options.
-            var provisoire_consultation = []; 
-            for (var w = 0; w<this.awesomeStudent[j].consultation.length; ++w){
-              if (this.awesomeStudent[j].consultation[w].id_choix ==  id ){
-                  provisoire_consultation.push(this.awesomeStudent[j].consultation[w])
+          for (var w = 0; w < this.awesomeChoice[i].options.length; w++) {
+            this.awesomeChoice[i].options[w].containers = {};
+            this.awesomeChoice[i].options[w].containers = container;
+
+          }
+          this.models.lists[provisoire] = { allowedTypes: [provisoire], people: [] }; // on ajoute le choix en entré en disant que seul les individus du meme type peuvent venir, choix = parcours, module un etc
+          this.models_second.lists[provisoire] = { allowedTypes: [provisoire], people: [], choice: this.awesomeChoice[i].options }; // on fait la meme chose dans la liste de droite
+          for (var j = 0; j < this.awesomeStudent.length; ++j) { // pour tout les étudiants on va recuperer les valeurs pour chaque options.
+            var provisoire_consultation = [];
+            for (var w = 0; w < this.awesomeStudent[j].consultation.length; ++w) {
+              if (this.awesomeStudent[j].consultation[w].id_choix == id) {
+                provisoire_consultation.push(this.awesomeStudent[j].consultation[w])
               }
             }
-            this.models.lists[provisoire].people.push({nom : this.awesomeStudent[j].nom,test: 1, prenom : this.awesomeStudent[j].prenom , type : provisoire , consultation : provisoire_consultation});
+            this.models.lists[provisoire].people.push({ nom: this.awesomeStudent[j].nom, test: 1, prenom: this.awesomeStudent[j].prenom, type: provisoire, consultation: provisoire_consultation });
           }
         }
 
-        
 
-        
+        this.creationOption();
+        console.log(this.choice);
+        this.creationStudent();
+
       });
+
   }
 
 
 
+  creationOption() {
+   
+    for (var i = 0; i < this.awesomeChoice.length; i++) {
+      var tmp = this.awesomeChoice[i];
+      this.choice[tmp.id] = {};
+      var option = {};
+      console.log(tmp + " temporaire");
+      for (var j = 0; j < tmp.options.length; j++) {
+        var tmp_choix = tmp.options[j];
+        var divers = { bids: {}, arguments: {}, pref: {}};
+        var affectation = {bids :[] , arguments: [], preference : [], dictator : []}
+        option[tmp_choix.id] = ({ nom: tmp_choix.nom, max: tmp_choix.place_maxi, min: tmp_choix.place_min, affect: divers, affect_real : affectation});
+
+      }
+      this.choice[tmp.id] = { nom: tmp.nom, option: option };
+    }
+
+    for (var i = 0; i < this.awesomeStudent.length; i++) {
+
+      for (var j = 0; j < this.awesomeStudent[i].consultation.length; j++) {
+        var pos = this.awesomeStudent[i].consultation[j];
+
+
+        if (!this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["bids"].hasOwnProperty(pos.bids)) {
+          this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["bids"][pos.bids] = [];
+        }
+
+        this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["bids"][pos.bids].push(pos.id_etudiant);
+
+        if (!this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["pref"].hasOwnProperty(pos.preference)) {
+          this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["pref"][pos.preference] = [];
+        }
+
+        this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["pref"][pos.preference].push(pos.id_etudiant);
+
+        if(pos.hasOwnProperty("arguments")){
+          
+          
+          for(var w =0 ; w < pos.arguments.length;w++){
+          if (!this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"].hasOwnProperty(pos.arguments[w])){
+            this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"][pos.arguments[w]] = [];
+            console.log(pos.id_etudiant + " on cree une nouvelle entrée");
+                      }
+                      this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"][pos.arguments[w]].push(pos.id_etudiant);
+          }
+        }
+
+      }
+    }
+  }
+
+
+  creationStudent(){
+    for(var j = 0; j< this.awesomeStudent.length; j++)    {
+
+      var etudiant = this.awesomeStudent[j];
+      this.student[etudiant.id] = {nom : etudiant.nom , prenom : etudiant.prenom};
+      for (var prop in this.choice) {
+        this.student[etudiant.id][prop] = ["yop"];
+        console.log(prop + " c est la variable");
 }
+     
+
+    }
+ console.log(this.student);
+  }
+
+
+  choiceStudent(item){
+
+var tab = {};
+    for(var j = 0 ; j<item.length ; j++){
+      console.log(item[j]);
+      
+      
+      tab[item[j]] = this.student[item[j]];
+  }
+
+  this.awesomeStudent = tab;
+console.log(tab);
+}
+
+ CreationDropZone(){
+  
+
+
+ }
+
+}
+
+
 
 
 
