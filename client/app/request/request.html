@@ -21,12 +21,12 @@
     <button type="button" ng-repeat="option in $ctrl.awesomeChoice" ng-click="$ctrl.onglet= option.nom" ng-if="$ctrl.onglet != option.nom"> {{option.nom}}  </button>
   </div>
 
-  <p class="request_zone col-md-12">
+  <p class="cadre request_zone col-md-12">
     request zone
    
   </p>
 
-  <div id="choice" class="col-md-4">
+  <div id="choice" class="cadre col-md-4">
 
     zone de choix
 
@@ -52,7 +52,7 @@
 
                 <ul>
                   <li ng-repeat="(nameValue, student)  in valeur" ng-click="$ctrl.choiceStudent(student)">
-                    {{nameValue}}
+                   ({{$ctrl.count(student)}}) {{nameValue}}
                   </li>
                 </ul>
               </li>
@@ -64,7 +64,7 @@
     </br>
   </div>
 
-  <div id="student" class="col-md-2">
+  <div id="student" class="col-md-2 cadre">
     zone student
 
     <ul dnd-list="list">
@@ -73,7 +73,7 @@
     </ul>
   </div>
 
-  <div id="panier" class="col-md-6">
+  <div id="panier" class="col-md-6 cadre">
  
     zone de panier
 
@@ -86,17 +86,18 @@
 
         <h3 class="panel_title"> Assignment {{choice.nom}} </h3>
 
-
-        <div ng-repeat=" option in choice.option" class="cadre container-element box box-blue">
+       <div class="row particulier"> 
+        <div ng-repeat=" option in choice.option" class="cadre container-element box box-blue col-md-5 ">
 
           <h4> {{option.nom}} {{option.max}} places</h4>
-
+          
           <div class="cadrebis container-element box box-blue" ng-repeat="(type, affect) in option.affect_real">
             <h5> {{type}} </h5>
             <ul dnd-list="affect" dnd-allowed-types="choice.allowedTypes" dnd-drop="$ctrl.fctlog(item, choice.place)">
               <li ng-repeat="item in affect" dnd-draggable="item" dnd-moved="affect.splice($index,1)" dnd-effect-allowed="move">
-                <div class="item">{{item.nom}} {{item.type}}</div>
+                <div class="item">{{item.nom}}</div>
               </li>
+          </div>
           </div>
         </div>
       </div>

@@ -229,7 +229,7 @@ ul[dnd-list] li.selected {
     background-color: #fff;
     border-color: #ccc;
 }
-
+/*
 .request_zone{
     background-color: cyan;
 }
@@ -284,4 +284,9 @@ ul[dnd-list] li.selected {
 h5 {
     background-color : #51C4B5;
     margin : 0 ;
+}
+
+.particulier{
+    margin-right: -55px;
+    margin-left:  5px;
 }

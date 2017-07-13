@@ -438,6 +438,10 @@ console.log(tab);
    return item;
  }
 
+ count(item){
+   return item.length ; 
+ }
+
  
 
 }
