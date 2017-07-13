@@ -22,16 +22,12 @@
   </div>
 
   <p class="request_zone col-md-12">
-    </br>
-    </br>
     request zone
-    </br>
-    <br>
+   
   </p>
 
-  <div id="choice" class="col-md-5">
-    </br>
-    </br>
+  <div id="choice" class="col-md-4">
+
     zone de choix
 
     <ul>
@@ -39,14 +35,13 @@
         <input type="checkbox" id="{{nameChoix}}" checked="checked" />
         <i class="fa fa-angle-double-right"></i>
         <i class="fa fa-angle-double-down"></i>
-        <label for="{{nameChoix}}">{{nameChoix}} {{choix.nom}}</label>
-        <p> </p>
+        <label for="{{nameChoix}}"> {{choix.nom}}</label>
         <ul>
           <li class="tree" ng-repeat="(nameOption, option) in choix.option">
             <input type="checkbox" id="{{nameOption}}" checked="checked" />
             <i class="fa fa-angle-double-right"></i>
             <i class="fa fa-angle-double-down"></i>
-            <label for="{{nameOption}}">{{nameOption}} a pour nom {{option.nom}}</label>
+            <label for="{{nameOption}}">{{option.nom}}</label>
 
             <ul>
               <li class="tree" ng-repeat=" (nameValeur, valeur) in option.affect">
@@ -70,211 +65,42 @@
   </div>
 
   <div id="student" class="col-md-2">
-    </br>
-    </br>
     zone student
 
     <ul dnd-list="list">
-      <li ng-repeat="list in $ctrl.awesomeStudent" dnd-draggable="list" dnd-moved="list.splice($index, 1)" dnd-effect-allowed="move">
-        {{list.nom}}</li>
+      <li ng-repeat="list in $ctrl.awesomeStudent" dnd-draggable="list" dnd-moved="list.splice($index, 1)" dnd-effect-allowed="move" dnd-type="list.type">
+        {{list.nom}}  </li>
     </ul>
-    </br>
-    </br>
   </div>
 
-  <div id="panier" class="col-md-5">
-    </br>
-    </br>
+  <div id="panier" class="col-md-6">
+ 
     zone de panier
-    <div ng-repeat="(ChoiceName, choice) in $ctrl.choice">
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          <h3 class="panel_title"> Assignment {{ChoiceName}} </h3>
+
+    <span ng-repeat="(ChoiceName, choice) in $ctrl.choice">
+    {{choice.nom}}: <input type="checkbox" ng-model="choice.visible" aria-label="Toggle ngShow">
+    </span>
+
+    <div ng-repeat="(ChoiceName, choice) in $ctrl.choice" ng-show="choice.visible">
+      <div class=" cadre dropzone box box-yellow">
+
+        <h3 class="panel_title"> Assignment {{choice.nom}} </h3>
+
+
+        <div ng-repeat=" option in choice.option" class="cadre container-element box box-blue">
+
+          <h4> {{option.nom}} {{option.max}} places</h4>
+
+          <div class="cadrebis container-element box box-blue" ng-repeat="(type, affect) in option.affect_real">
+            <h5> {{type}} </h5>
+            <ul dnd-list="affect" dnd-allowed-types="choice.allowedTypes" dnd-drop="$ctrl.fctlog(item, choice.place)">
+              <li ng-repeat="item in affect" dnd-draggable="item" dnd-moved="affect.splice($index,1)" dnd-effect-allowed="move">
+                <div class="item">{{item.nom}} {{item.type}}</div>
+              </li>
+          </div>
         </div>
       </div>
     </div>
-    </br>
-    </br>
+    
   </div>
-
-
-
-  <div class="col-md-8">
-    <div class="row">
-      <div ng-repeat="(listName, listbis) in $ctrl.models.lists" class="col-md-6" ng-if="$ctrl.onglet==listName || $ctrl.onglet=='general'">
-        <div class="panel panel-info">
-          <div class="panel-heading">
-            <h3 class="panel-title">List {{listName}} </h3>
-          </div>
-          <ul dnd-list="listbis.people" dnd-allowed-types="listbis.allowedTypes" dnd-inserted="$ctrl.fctinsert(item)">
-            <!-- The dnd-draggable directive makes an element draggable and will
-         transfer the object that was assigned to it. If an element was
-         dragged away, you have to remove it from the original list
-         yourself using the dnd-moved attribute -->
-            <li ng-repeat="item in listbis.people" dnd-draggable="item" dnd-type="item.type" dnd-dragstart="$ctrl.fctstart(item)" dnd-dragend="$ctrl.fctend(item)"
-              dnd-moved="listbis.people.splice($index, 1)" dnd-dragend="$ctrl.fctend(item)" dnd-effect-allowed="copyLink" dnd-selected="models.selected = item"
-              ng-class="{'selected': models.selected === item}">
-              {{item.nom}} {{item.prenom}} et {{item.test}} et {{$$hashKey}}
-              <span ng-repeat="petit in item.consultation"> <br> {{petit.id_option}} a pour mise {{petit.bids}}  et preference {{petit.preference}} le choix est {{petit.id_choix}}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="col-md-4">
-    <div class="row">
-      <div ng-repeat="(listName, listbis) in $ctrl.models_second.lists" class="col-md-12" ng-if="$ctrl.onglet==listName || $ctrl.onglet=='general'">
-        <div class="panel panel-info">
-          <div class="panel-heading">
-            <h3 class="panel-title">Assignment {{listName}} </h3>
-          </div>
-
-          <div ng-repeat="listtris in listbis.choice"> {{listtris.nom}}
-            <div ng-repeat="(containerName, contenu) in listtris.containers">
-              {{containerName}}
-              <ul dnd-list="contenu.people" dnd-inserted="$ctrl.fctinsert(item)">
-                <li ng-repeat="item in contenu.people" dnd-draggable="item" dnd-dragstart="$ctrl.fctstart(item)" dnd-type="item.type" dnd-moved="contenu.people.splice($index,1)"
-                  dnd-effect-allowed="copy" dnd-selected="models.selected = item" ng-class="{'selected': models.selected === item}"
-                  dnd-dragend="$ctrl.fctend(item)">
-                  {{item.nom}} {{item.prenom}} et <span ng-click="$ctrl.fcttest(item)"> {{item.test}} </span>
-                </li>
-              </ul>
-
-            </div>
-          </div>
-
-          <ul ng-click="$ctrl.$fcttest()" dnd-list="listbis.people" dnd-allowed-types="listbis.allowedTypes" dnd-inserted="$ctrl.fctinsert(item)">
-            <!-- The dnd-draggable directive makes an element draggable and will
-         transfer the object that was assigned to it. If an element was
-         dragged away, you have to remove it from the original list
-         yourself using the dnd-moved attribute -->
-            <li ng-repeat="item in listbis.people" ng-click="$ctrl.fcttest()" dnd-draggable="item" dnd-dragstart="$ctrl.fctstart(item)"
-              dnd-dragend="$ctrl.fctend(item)" dnd-type="item.type" dnd-moved="listbis.people.splice($index, 1)" dnd-effect-allowed="move">
-              {{item.nom}} {{item.prenom}} et
-              <span ng-repeat="petit in item.consultation"> <br> {{petit.id_option}} a pour mise {{petit.bids}}  et preference {{petit.preference}} le choix est {{petit.id_choix}}</span>
-            </li>
-          </ul>
-
-        </div>
-      </div>
-    </div>
-
-    -->
-
-
-    <div class "col-md-9">
-      <div class="row">
-        <div class="panel panel-default">
-
-          <h3 class="panel-title">Generated Model</h3>
-
-          <div class="panel-body">
-            <pre class="code">{{modelAsJson}}</pre>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-
-    <form>
-      <!-- zone permettant d'indiquer le nom d'un fichier ou l'on veut sauvegarder l'état actuelle pour pouvoir le recharger plus tard -->
-      <label> File name  </label>
-      <input type="text" ng-model="$ctrl.nameFileOut">
-      <button type="button" ng-click="$ctrl.saveJSON()"><a class="btn"  ng-href="{{ urla }}">Export to JSON</a> </button>
-
-
-
-    </form>
-  </div>
-  <div class="col-md-12">
-    <h1>Demo: Item Types</h1>
-
-    <div class="alert alert-success">
-      <strong>Instructions:</strong> Drag &amp; drop the names to move them around. Note that the names can not be dropped
-      in the list for the wrong gender. This is achieved with the dnd-type and dnd-allowed-types attributes. This demo also
-      shows the use of the dnd-disable-if attribute, which is used here to limit the number of names per list, as well as
-      fix Alex' position. You can combine these functions with <a href="#/nested">nested lists</a> to build very powerful
-      UIs.
-    </div>
-
-    <div class="typesDemo row">
-
-      <div ng-repeat="list in lists" class="col-md-4">
-        <div class="panel panel-info">
-          <div class="panel-heading">
-            <h3 class="panel-title">List of {{list.label}} (max. {{list.max}})</h3>
-          </div>
-          <ul dnd-list="list.people" dnd-allowed-types="list.allowedTypes">
-
-            <li ng-repeat="person in list.people" dnd-draggable="person" dnd-type="person.type" dnd-disable-if="person.type == 'unknown'"
-              dnd-copied="list.people.splice($index, 1)" dnd-dragend="$ctrl.changement(person)" class="background-{{person.type}}">
-              <dnd-nodrag>
-                <div dnd-handle class="handle">:::</div>
-                <div class="name">
-
-                  <span> {{person.name }} {{person.type}} </span>
-                </div>
-              </dnd-nodrag>
-            </li>
-
-            <li class="dndPlaceholder">
-              Drop any all <strong>{{list.allowedTypes.join(' or ')}}</strong> here
-            </li>
-
-          </ul>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="row">
-      <div class="col-md-8" view-source="types"></div>
-
-      <div class="col-md-4">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">List Models</h3>
-          </div>
-          <div class="panel-body">
-            <pre class="code">{{modelAsJson}}</pre>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <ul>
-      <li><input type="checkbox" id="c1" />
-        <i class="fa fa-angle-double-right"></i>
-        <i class="fa fa-angle-double-down"></i>
-        <label for="c1">Dossier A</label>
-        <ul>
-          <li>Sous dossier A1</li>
-          <li>Sous dossier A2</li>
-          <li>Sous dossier A3</li>
-        </ul>
-      </li>
-      <li><input type="checkbox" id="b2" />
-        <i class="fa fa-angle-double-right"></i>
-        <i class="fa fa-angle-double-down"></i>
-        <label for="b2">Dossier B</label>
-        <ul>
-          <li>Sous dossier B1</li>
-          <li><input type="checkbox" id="c3" />
-            <i class="fa fa-angle-double-right"></i>
-            <i class="fa fa-angle-double-down"></i>
-            <label for="c3">Sous dossier B2</label>
-            <ul>
-              <li>Sous-sous dossier B21</li>
-              <li>Sous-sous dossier B22</li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+</div>

@@ -3,7 +3,7 @@ import uiRouter from 'angular-ui-router';
 import routing from './request.route';
 
 export class RequestController {
-  awesomeStudent = ["etudiant"];
+  awesomeStudent = [];
 
 
   /*@ngInject*/
@@ -208,8 +208,9 @@ export class RequestController {
     console.log(item);
     console.log("commencer");
   }
-  fctend(item) { // modifie l'objet de base.
-    item.test = 2;
+  fctend(item,place) { // modifie l'objet de base.
+  console.log(place +" place");
+    item.test = this.Ajout(item.test,place)
     console.log(item);
     console.log("fini");
   }
@@ -306,10 +307,10 @@ export class RequestController {
         var tmp_choix = tmp.options[j];
         var divers = { bids: {}, arguments: {}, pref: {}};
         var affectation = {bids :[] , arguments: [], preference : [], dictator : []}
-        option[tmp_choix.id] = ({ nom: tmp_choix.nom, max: tmp_choix.place_maxi, min: tmp_choix.place_min, affect: divers, affect_real : affectation});
+        option[tmp_choix.id] = ({ nom: tmp_choix.nom, max: tmp_choix.place_maxi, min: tmp_choix.place_min, affect: divers, affect_real : affectation  });
 
       }
-      this.choice[tmp.id] = { nom: tmp.nom, option: option };
+      this.choice[tmp.id] = { nom: tmp.nom, option: option,  allowedTypes : this.CreateType(i),  place : i };
     }
 
     for (var i = 0; i < this.awesomeStudent.length; i++) {
@@ -348,18 +349,22 @@ export class RequestController {
 
 
   creationStudent(){
+    
     for(var j = 0; j< this.awesomeStudent.length; j++)    {
 
       var etudiant = this.awesomeStudent[j];
-      this.student[etudiant.id] = {nom : etudiant.nom , prenom : etudiant.prenom};
+      this.student[etudiant.id] = {nom : etudiant.nom , prenom : etudiant.prenom , type :"a00", id : etudiant.id};
       for (var prop in this.choice) {
         this.student[etudiant.id][prop] = ["yop"];
         console.log(prop + " c est la variable");
 }
+
+
      
 
     }
  console.log(this.student);
+ this.awesomeStudent = this.student;
   }
 
 
@@ -382,6 +387,58 @@ console.log(tab);
 
 
  }
+
+ CreateType(place){
+   var type = [];
+
+   type.push("a00");
+   if (place ==0){
+     type.push("a01");
+   }
+   else{
+     type.push("a10");
+   }
+   return type ;
+ }
+
+ Ajout(type,place){
+
+   type[place] = "1";
+   return type;
+ }
+
+ fctlog(item,choice){
+  var newtype = ""; // type de l'objet de base
+  var newtypeobjet = ""; // type de l objet final
+  choice ++;
+
+  for(var i= 0; i<item.type.length ; i++){
+    if( i == 0){
+      newtype = "a";
+      newtypeobjet = "a";
+    }
+
+    else if( i ==choice){
+      newtype = newtype + "1";
+      newtypeobjet = newtypeobjet + "0";
+    }
+    else{
+    newtype = newtype + item.type[i] ;
+    newtypeobjet = newtypeobjet + "1";
+    
+    }
+  }
+
+  
+   console.log(  newtype);
+   item.type = newtypeobjet;
+
+   this.student[item.id]["type"] = newtype;
+   console.log(this.student[item.id]["type"]);
+   return item;
+ }
+
+ 
 
 }
 
