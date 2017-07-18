@@ -81,6 +81,8 @@ ul[dnd-list] li.selected {
  * The dnd-list should always have a min-height,
  * otherwise you can't drop to it once it's empty
  */
+
+ 
 .dropzone ul[dnd-list] {
     margin: 0px;
     min-height: 42px;
@@ -124,7 +126,7 @@ ul[dnd-list] li.selected {
 
 /***************************** Element Selection *****************************/
 
-.dropzone .selected .item {
+.dropzone .selected . {
     color: #3c763d;
     background-color: #dff0d8;
 }
@@ -142,8 +144,9 @@ ul[dnd-list] li.selected {
 
 /***************************** Element type specific styles *****************************/
 
-.dropzone .item {
-    padding: 10px 15px;
+.dropzone  {
+    padding: 5px ;
+
 }
 
 .dropzone .container-element {
@@ -225,4 +228,69 @@ ul[dnd-list] li.selected {
     color: #333;
     background-color: #fff;
     border-color: #ccc;
+}
+/*
+.request_zone{
+    background-color: cyan;
+}
+
+#choice{
+   background-color: green;     
+}
+
+#student{
+    background-color: red;
+}
+
+#panier {
+    background-color: orange;
+}*/
+
+
+
+/* fonctionnel */
+.tree input {
+  display: none;
+}
+.tree input ~ ul {
+ display: none;
+}
+.tree input:checked ~ ul {
+ display: block;
+}
+.tree input ~ .fa-angle-double-down {
+  display: none;
+}
+.tree input:checked ~ .fa-angle-double-right {
+  display: none;
+}
+.tree input:checked ~ .fa-angle-double-down {
+  display: inline;
+}
+
+/* habillage */
+.tree li {
+  display: block;
+  font-family: 'Arial';
+  font-size: 15px;
+  padding: 0.2em;
+  border: 1px solid transparent;
+}
+
+.cadrebis {
+   border:  2px solid black;
+}
+
+h5 {
+    background-color : #51C4B5;
+    margin : 0 ;
+}
+
+.particulier{
+    margin-right: -55px;
+    margin-left:  5px;
+}
+
+.information{
+    width: 100%;
 }
