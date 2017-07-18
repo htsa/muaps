@@ -208,9 +208,9 @@ export class RequestController {
     console.log(item);
     console.log("commencer");
   }
-  fctend(item,place) { // modifie l'objet de base.
-  console.log(place +" place");
-    item.test = this.Ajout(item.test,place)
+  fctend(item, place) { // modifie l'objet de base.
+    console.log(place + " place");
+    item.test = this.Ajout(item.test, place)
     console.log(item);
     console.log("fini");
   }
@@ -297,7 +297,7 @@ export class RequestController {
 
 
   creationOption() {
-   
+
     for (var i = 0; i < this.awesomeChoice.length; i++) {
       var tmp = this.awesomeChoice[i];
       this.choice[tmp.id] = {};
@@ -305,12 +305,12 @@ export class RequestController {
       console.log(tmp + " temporaire");
       for (var j = 0; j < tmp.options.length; j++) {
         var tmp_choix = tmp.options[j];
-        var divers = { bids: {}, arguments: {}, pref: {}};
-        var affectation = {bids :[] , arguments: [], preference : [], dictator : []}
-        option[tmp_choix.id] = ({ nom: tmp_choix.nom, max: tmp_choix.place_maxi, min: tmp_choix.place_min, affect: divers, affect_real : affectation  });
+        var divers = { bids: {}, arguments: {}, pref: {} };
+        var affectation = { bids: [], arguments: [], preference: [], dictator: [] }
+        option[tmp_choix.id] = ({ nom: tmp_choix.nom, max: tmp_choix.place_maxi, min: tmp_choix.place_min, affect: divers, affect_real: affectation });
 
       }
-      this.choice[tmp.id] = { nom: tmp.nom, option: option,  allowedTypes : this.CreateType(i),  place : i };
+      this.choice[tmp.id] = { nom: tmp.nom, option: option, allowedTypes: this.CreateType(i), place: i };
     }
 
     for (var i = 0; i < this.awesomeStudent.length; i++) {
@@ -331,15 +331,15 @@ export class RequestController {
 
         this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["pref"][pos.preference].push(pos.id_etudiant);
 
-        if(pos.hasOwnProperty("arguments")){
-          
-          
-          for(var w =0 ; w < pos.arguments.length;w++){
-          if (!this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"].hasOwnProperty(pos.arguments[w])){
-            this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"][pos.arguments[w]] = [];
-            console.log(pos.id_etudiant + " on cree une nouvelle entrée");
-                      }
-                      this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"][pos.arguments[w]].push(pos.id_etudiant);
+        if (pos.hasOwnProperty("arguments")) {
+
+
+          for (var w = 0; w < pos.arguments.length; w++) {
+            if (!this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"].hasOwnProperty(pos.arguments[w])) {
+              this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"][pos.arguments[w]] = [];
+              console.log(pos.id_etudiant + " on cree une nouvelle entrée");
+            }
+            this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"][pos.arguments[w]].push(pos.id_etudiant);
           }
         }
 
@@ -348,99 +348,170 @@ export class RequestController {
   }
 
 
-  creationStudent(){
-    
-    for(var j = 0; j< this.awesomeStudent.length; j++)    {
+  creationStudent() {
+
+    for (var j = 0; j < this.awesomeStudent.length; j++) {
 
       var etudiant = this.awesomeStudent[j];
-      this.student[etudiant.id] = {nom : etudiant.nom , prenom : etudiant.prenom , type :"a00", id : etudiant.id};
-      for (var prop in this.choice) {
-        this.student[etudiant.id][prop] = ["yop"];
-        console.log(prop + " c est la variable");
-}
+      this.student[etudiant.id] = { nom: etudiant.nom, prenom: etudiant.prenom, type: "a00", id: etudiant.id };
 
 
-     
 
     }
- console.log(this.student);
- this.awesomeStudent = this.student;
+    console.log(this.student);
+    this.awesomeStudent = this.student;
   }
 
 
-  choiceStudent(item){
+  choiceStudent(item) {
 
-var tab = {};
-    for(var j = 0 ; j<item.length ; j++){
+    var tab = {};
+    for (var j = 0; j < item.length; j++) {
       console.log(item[j]);
-      
-      
+
+
       tab[item[j]] = this.student[item[j]];
+    }
+
+    this.awesomeStudent = tab;
+    console.log(tab);
   }
 
-  this.awesomeStudent = tab;
-console.log(tab);
-}
+  choiceAllStudent(){
+    this.awesomeStudent = this.student;
+  }
 
- CreationDropZone(){
-  
-
-
- }
-
- CreateType(place){
-   var type = [];
-
-   type.push("a00");
-   if (place ==0){
-     type.push("a01");
-   }
-   else{
-     type.push("a10");
-   }
-   return type ;
- }
-
- Ajout(type,place){
-
-   type[place] = "1";
-   return type;
- }
-
- fctlog(item,choice){
-  var newtype = ""; // type de l'objet de base
-  var newtypeobjet = ""; // type de l objet final
-  choice ++;
-
-  for(var i= 0; i<item.type.length ; i++){
-    if( i == 0){
-      newtype = "a";
-      newtypeobjet = "a";
-    }
-
-    else if( i ==choice){
-      newtype = newtype + "1";
-      newtypeobjet = newtypeobjet + "0";
-    }
-    else{
-    newtype = newtype + item.type[i] ;
-    newtypeobjet = newtypeobjet + "1";
+   coloration(item,bool){
     
+    for(var j = 0; j<item.length; j++){
+      this.student[item[j]]["color"] = bool;
+      console.log(this.student[item[j]]);
     }
+
   }
 
   
-   console.log(  newtype);
-   item.type = newtypeobjet;
 
-   this.student[item.id]["type"] = newtype;
-   console.log(this.student[item.id]["type"]);
-   return item;
- }
 
- count(item){
-   return item.length ; 
- }
+  CreateType(place) {
+    var type = [];
+
+    type.push("a00");
+    if (place == 0) {
+      type.push("a01");
+    }
+    else {
+      type.push("a10");
+    }
+    return type;
+  }
+
+  Ajout(type, place) {
+
+    type[place] = "1";
+    return type;
+  }
+
+  fctlog(item, choice) {
+    console.log(item);
+    console.log(choice);
+
+    var newtype = ""; // type de l'objet de base
+    var newtypeobjet = ""; // type de l objet final
+    choice++;
+
+    for (var i = 0; i < item.type.length; i++) {
+      if (i == 0) {
+        newtype = "a";
+        newtypeobjet = "a";
+      }
+
+      else if (i == choice) {
+        newtype = newtype + "1";
+        newtypeobjet = newtypeobjet + "0";
+      }
+      else {
+        newtype = newtype + item.type[i];
+        newtypeobjet = newtypeobjet + "1";
+
+      }
+    }
+
+
+
+    item.type = newtypeobjet;
+    /* console.log(this.choice);
+     console.log(this.choice["id_parcours"]["option"]["id_sdb"]["affect_real"]["bids"]);*/
+    this.student[item.id]["type"] = newtype;
+    
+    return item;
+  }
+
+  count(item) {
+    return item.length;
+  }
+
+  saveCsv = function () {
+
+    var bla = "";
+    this.consultation_id = 1;
+    if (this.nameFileOut == undefined) {
+      alert("tu n'as pas renseigne le nom d'un fichier");
+      return
+    }
+
+    for (var i in this.choice) {
+
+      for (var prop in this.choice[i]["option"]) {
+        console.log("plantage ici");
+        console.log(i);
+        console.log(this.choice[i]);
+        var tmp = this.choice[i]["option"][prop]["affect_real"];
+        console.log(tmp);
+        for (var raison in tmp) {
+
+          for (var j = 0; j < tmp[raison].length; j++) {
+            console.log(tmp[raison][j]);
+            bla = bla + this.consultation_id + ";"+ tmp[raison][j]["id"] +";"+ prop + ";" + i + " \n";
+          }
+        }
+      }
+    }
+
+    var nom_du_fichier = this.nameFileOut + '.csv';
+    var blob = new Blob([bla], { type: "application/json;charset=utf-8;" });
+    var downloadLink = angular.element('<a></a>');
+    var testici = window.URL.createObjectURL(blob);
+    downloadLink.attr('href', testici);
+    downloadLink.attr('download', nom_du_fichier);
+    downloadLink[0].click();
+    this.nameFile = nom_du_fichier;
+    var aide_file = [blob];
+    var fichier = new File(aide_file, nom_du_fichier);
+    this.Upload.upload({
+      url: 'api/things/upload',
+      data: { file: fichier }
+    })
+
+  }
+
+  selection(destination,affect){
+
+
+  for(var person in this.awesomeStudent){
+    
+    if(this.awesomeStudent[person]["select"]){
+      var tmp = this.awesomeStudent[person];
+      tmp = JSON.stringify(tmp);
+      tmp = JSON.parse(tmp); 
+    var stp = this.fctlog(tmp, destination.place)      ;
+    
+    
+    affect.push(stp);
+
+    }
+  }
+}
 
  
 
