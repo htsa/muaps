@@ -45,44 +45,6 @@ export class RequestController {
     }, true);
 
 
-
-    $scope.lists = [
-      {
-        label: "Men",
-        allowedTypes: ['1'],
-        max: 4,
-        people: [
-          { name: "Boby", type: "1" },
-          { name: "Charlie", type: "1" },
-          { name: "Dave", type: "1" },
-        ]
-      },
-      {
-        label: "Women",
-        allowedTypes: ['2'],
-        max: 4,
-        people: [
-          { name: "Alice", type: "2" },
-          { name: "Eve", type: "2" },
-          { name: "Peggy", type: "2" }
-        ]
-      },
-      {
-        label: "People",
-        allowedTypes: ['1', '2'],
-        max: 6,
-        people: [
-          { name: "Frank", type: "1" },
-          { name: "Mallory", type: "2" },
-          { name: "Alex", type: "unknown" },
-          { name: "Oscar", type: "1" },
-          { name: "Wendy", type: "2" }
-        ]
-      }
-    ];
-
-
-
   }
 
 
@@ -377,20 +339,20 @@ export class RequestController {
     console.log(tab);
   }
 
-  choiceAllStudent(){
+  choiceAllStudent() {
     this.awesomeStudent = this.student;
   }
 
-   coloration(item,bool){
-    
-    for(var j = 0; j<item.length; j++){
+  coloration(item, bool) {
+
+    for (var j = 0; j < item.length; j++) {
       this.student[item[j]]["color"] = bool;
       console.log(this.student[item[j]]);
     }
 
   }
 
-  
+
 
 
   CreateType(place) {
@@ -407,7 +369,6 @@ export class RequestController {
   }
 
   Ajout(type, place) {
-
     type[place] = "1";
     return type;
   }
@@ -415,17 +376,14 @@ export class RequestController {
   fctlog(item, choice) {
     console.log(item);
     console.log(choice);
-
     var newtype = ""; // type de l'objet de base
     var newtypeobjet = ""; // type de l objet final
     choice++;
-
     for (var i = 0; i < item.type.length; i++) {
       if (i == 0) {
         newtype = "a";
         newtypeobjet = "a";
       }
-
       else if (i == choice) {
         newtype = newtype + "1";
         newtypeobjet = newtypeobjet + "0";
@@ -433,18 +391,27 @@ export class RequestController {
       else {
         newtype = newtype + item.type[i];
         newtypeobjet = newtypeobjet + "1";
-
       }
     }
-
-
-
     item.type = newtypeobjet;
-    /* console.log(this.choice);
-     console.log(this.choice["id_parcours"]["option"]["id_sdb"]["affect_real"]["bids"]);*/
     this.student[item.id]["type"] = newtype;
-    
     return item;
+  }
+
+  selection(destination, affect) {
+
+
+    for (var person in this.awesomeStudent) {
+      if (this.awesomeStudent[person]["select"]) {
+        if ((destination.allowedTypes).indexOf(this.awesomeStudent[person]["type"]) >= 0) {
+          var tmp = this.awesomeStudent[person];
+          tmp = JSON.stringify(tmp);
+          tmp = JSON.parse(tmp);
+          var stp = this.fctlog(tmp, destination.place);
+          affect.push(stp);
+        }
+      }
+    }
   }
 
   count(item) {
@@ -472,7 +439,7 @@ export class RequestController {
 
           for (var j = 0; j < tmp[raison].length; j++) {
             console.log(tmp[raison][j]);
-            bla = bla + this.consultation_id + ";"+ tmp[raison][j]["id"] +";"+ prop + ";" + i + " \n";
+            bla = bla + this.consultation_id + ";" + tmp[raison][j]["id"] + ";" + prop + ";" + i + " \n";
           }
         }
       }
@@ -495,25 +462,9 @@ export class RequestController {
 
   }
 
-  selection(destination,affect){
 
 
-  for(var person in this.awesomeStudent){
-    
-    if(this.awesomeStudent[person]["select"]){
-      var tmp = this.awesomeStudent[person];
-      tmp = JSON.stringify(tmp);
-      tmp = JSON.parse(tmp); 
-    var stp = this.fctlog(tmp, destination.place)      ;
-    
-    
-    affect.push(stp);
 
-    }
-  }
-}
-
- 
 
 }
 
