@@ -3,7 +3,7 @@ import uiRouter from 'angular-ui-router';
 import routing from './request.route';
 
 export class RequestController {
-  awesomeStudent = [];
+  
 
 
   /*@ngInject*/
@@ -16,20 +16,15 @@ export class RequestController {
     this.awesomeChoice = [];
     this.choice = {};
     this.student = {};
-    this.onglet = "general";
     this.models = {
     };
+    this.awesomeStudent = [];
 
     this.models_second = {
     };
     $scope.model = this.models_second;
 
-
-    this.binaire = [];
-
-
     $scope.data = {
-      test: "blabla",
       student: this.awesomeStudent,
       choice: this.awesomeChoice,
       liste_gauche: this.models,
@@ -39,12 +34,6 @@ export class RequestController {
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('thing');
     });
-
-    $scope.$watch('model', function (model) {
-      $scope.modelAsJson = angular.toJson(model, true);
-    }, true);
-
-
   }
 
 
@@ -69,8 +58,12 @@ export class RequestController {
     }
     this.$http.get('./storage/' + this.nameFile)
       .then(res => {
-        console.log(res.data.test);
-        console.log(res.data.etudiants);
+          this.choice = {};
+          this.awesomeStudent = [];
+          this.student = {};
+          console.log(this.awesomeStudent);
+          console.log("ici");
+
         if (res.data.version == 1) {
           this.ChargerVersion();
           console.log("version");
@@ -106,7 +99,6 @@ export class RequestController {
       .then(response => {
         this.awesomeStudent = response.data.etudiants;
         this.awesomeChoice = response.data.Choix;
-        this.onglet = "valide";
       });
   }
 

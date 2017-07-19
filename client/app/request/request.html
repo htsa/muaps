@@ -17,13 +17,12 @@
 
 
   <div class="col-md-12">
-    <button type="button" ng-if="$ctrl.onglet != 'general'" ng-click="$ctrl.onglet ='general'">vue general</button>
-    <button type="button" ng-repeat="option in $ctrl.awesomeChoice" ng-click="$ctrl.onglet= option.nom" ng-if="$ctrl.onglet != option.nom"> {{option.nom}}  </button>
+   <br/>
   </div>
 
   <p class="cadre request_zone col-md-12">
     request zone
-   
+
   </p>
 
   <div id="choice" class="cadre col-md-4">
@@ -34,16 +33,16 @@
       <li class="tree">
         <label ng-click="$ctrl.choiceAllStudent()"> all <label> </li>
       <li class="tree" ng-repeat="(nameChoix,choix) in $ctrl.choice">
-        <input type="checkbox" id="{{nameChoix}}" checked="checked" />
+        <input type="checkbox" id="choix{{nameChoix}}" checked="checked" />
         <i class="fa fa-angle-double-right"></i>
         <i class="fa fa-angle-double-down"></i>
-        <label for="{{nameChoix}}"> {{choix.nom}}</label>
+        <label for="choix{{nameChoix}}"> {{choix.nom}}</label>
         <ul>
           <li class="tree" ng-repeat="(nameOption, option) in choix.option">
-            <input type="checkbox" id="{{nameOption}}" checked="checked" />
+            <input type="checkbox" id="option{{nameOption}}" checked="checked" />
             <i class="fa fa-angle-double-right"></i>
             <i class="fa fa-angle-double-down"></i>
-            <label for="{{nameOption}}">{{option.nom}}</label>
+            <label for="option{{nameOption}}">{{option.nom}}</label>
 
             <ul>
               <li class="tree" ng-repeat=" (nameValeur, valeur) in option.affect">
@@ -53,8 +52,9 @@
                 <label for="{{nameOption}}{{nameValeur}}">{{nameValeur}}</label>
 
                 <ul>
-                  <li ng-repeat="(nameValue, student)  in valeur" ng-click="$ctrl.choiceStudent(student) " ng-mouseover= "$ctrl.coloration(student,true)" ng-mouseleave="$ctrl.coloration(student,false)" >
-                   ({{$ctrl.count(student)}}) {{nameValue}}
+                  <li ng-repeat="(nameValue, student)  in valeur" ng-click="$ctrl.choiceStudent(student) " ng-mouseover="$ctrl.coloration(student,true)"
+                    ng-mouseleave="$ctrl.coloration(student,false)">
+                    ({{$ctrl.count(student)}}) {{nameValue}}
                   </li>
                 </ul>
               </li>
@@ -62,21 +62,21 @@
           </li>
         </ul>
     </ul>
-    </br>
-    </br>
   </div>
+  
 
   <div id="student" class="col-md-2 cadre">
     zone student
 
     <ul dnd-list="list">
-      <li ng-repeat="list in $ctrl.awesomeStudent" dnd-draggable="list" dnd-moved="list.splice($index, 1)" dnd-effect-allowed="move" dnd-type="list.type" ng-style="list.color == true && {'background-color': 'yellow'}">
-      <input type="checkbox" ng-model="list.select" aria-label="Toggle ngShow">  {{list.nom}} {{list.type}}  </li>
+      <li ng-repeat="list in $ctrl.awesomeStudent" dnd-draggable="list" dnd-moved="list.splice($index, 1)" dnd-effect-allowed="move"
+        dnd-type="list.type" ng-style="list.color == true && {'background-color': 'yellow'}">
+        <input type="checkbox" ng-model="list.select" aria-label="Toggle ngShow"> {{list.nom}} {{list.type}} </li>
     </ul>
   </div>
 
   <div id="panier" class="col-md-6 cadre">
- 
+
     zone de panier
 
     <span ng-repeat="(ChoiceName, choice) in $ctrl.choice">
@@ -89,31 +89,31 @@
 
         <h3 class="panel_title"> Assignment {{choice.nom}} </h3>
 
-       <div class="row particulier"> 
-        <div ng-repeat=" option in choice.option" class="cadre container-element box box-blue col-md-5 ">
+        <div class="row particulier">
+          <div ng-repeat=" option in choice.option" class="cadre container-element box box-blue col-md-5 ">
 
-          <h4> {{option.nom}} {{option.max}} places</h4>
-          
-          <div class="cadrebis container-element box box-blue" ng-repeat="(type, affect) in option.affect_real">
-            <h5> {{type}}  ({{$ctrl.count(affect)}}) <button type="button" ng-click="$ctrl.selection(choice,affect)"> send here </button> </h5>
-            <ul dnd-list="affect" dnd-allowed-types="choice.allowedTypes" dnd-drop="$ctrl.fctlog(item, choice.place)">
-              <li ng-repeat="item in affect" dnd-draggable="item" dnd-moved="affect.splice($index,1)" dnd-effect-allowed="move">
-                <div class="item">{{item.nom}} {{item.type}}  <br/> <input class ="information" type="text" ng-model="item.information">  </div>
-              </li>
-          </div>
+            <h4> {{option.nom}} {{option.max}} places</h4>
+
+            <div class="cadrebis container-element box box-blue" ng-repeat="(type, affect) in option.affect_real">
+              <h5> {{type}} ({{$ctrl.count(affect)}}) <button type="button" ng-click="$ctrl.selection(choice,affect)"> send here </button>                </h5>
+              <ul dnd-list="affect" dnd-allowed-types="choice.allowedTypes" dnd-drop="$ctrl.fctlog(item, choice.place)">
+                <li ng-repeat="item in affect" dnd-draggable="item" dnd-moved="affect.splice($index,1)" dnd-effect-allowed="move">
+                  <div class="item">{{item.nom}} {{item.type}} <br/> <input class="information" type="text" ng-model="item.information"> </div>
+                </li>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    
+
   </div>
-      <form>
-      <!-- zone permettant d'indiquer le nom d'un fichier ou l'on veut sauvegarder l'état actuelle pour pouvoir le recharger plus tard -->
-      <label> File name  </label>
-      <input type="text" ng-model="$ctrl.nameFileOut">
-      <button type="button" ng-click="$ctrl.saveCsv()"><a class="btn"  ng-href="{{ urla }}">Export to JSON</a> </button>
+  <form>
+    <!-- zone permettant d'indiquer le nom d'un fichier ou l'on veut sauvegarder l'état actuelle pour pouvoir le recharger plus tard -->
+    <label> File name  </label>
+    <input type="text" ng-model="$ctrl.nameFileOut">
+    <button type="button" ng-click="$ctrl.saveCsv()"><a class="btn"  ng-href="{{ urla }}">Export to JSON</a> </button>
 
 
 
-    </form>
+  </form>
 </div>
