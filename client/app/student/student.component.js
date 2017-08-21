@@ -9,12 +9,17 @@ export class StudentController {
   onglet = 'student';
 
   /*@ngInject*/
-  constructor($http, $scope, socket, Upload) {
+  constructor($http, $scope, socket, Upload,$rootScope) {
     this.$http = $http;
     this.socket = socket;
     this.$scope = $scope;
+    this.$rootScope = $rootScope; 
     this.Upload = Upload;
     this.onglet = "";
+    this.nameFile = this.$rootScope.file_name ;
+    this.$rootScope.file_name =this.nameFile  ;
+    
+    
 
     $scope.$on('$destroy', function() {
       socket.unsyncUpdates('thing');
@@ -29,6 +34,7 @@ export class StudentController {
       console.log(this.awesomeStudent);
   });
 }*/
+
 
 addFile(){
    console.log(this.file);
@@ -47,9 +53,11 @@ else {
 
 
 ChargerFichier(){
+ 
   if (!/json$/.test(this.nameFile)){
     this.nameFile = this.nameFile + ".json";
   }
+  this.$rootScope.file_name = this.nameFile;
    this.$http.get('./storage/'+this.nameFile)
       .then(response => {
       this.awesomeStudent = response.data.etudiants;

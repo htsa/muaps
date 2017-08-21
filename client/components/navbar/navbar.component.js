@@ -13,7 +13,7 @@ export class NavbarComponent {
     state: 'student'
   },
   {
-    title : "Request",
+    title : "Assignment",
     state : "request"
   }
   ];

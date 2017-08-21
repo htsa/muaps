@@ -25,7 +25,7 @@
     <input type="text" ng-model="$ctrl.nameFile">
     <button type="submit" class="btn btn-primary" ng-click="$ctrl.ChargerFichier()">Go</button>
     </form>
-</div>
+
 <!--
 <div class="container">
   <div class="row">
@@ -55,15 +55,15 @@
   <thead>
     <tr>
       <th class= "centre" colspan="2"> informartions étudiants </th>
-      <th class = "centre" ng-repeat="choice in $ctrl.awesomeChoice |orderBy:'nom'" colspan="{{choice.options.length}}"> {{choice.nom}} </th>
+      <th class = "centre" ng-repeat="choice in $ctrl.awesomeChoice |orderBy:'id'" colspan="{{choice.options.length}}"> {{choice.nom}} </th>
     </tr>
 
     <tr>
       <th>Last name</th>
       <th>First name</th>
 
-        <th class="parasite" ng-repeat-start="choice in $ctrl.awesomeChoice |orderBy:'nom'"> </th>
-        <th ng-repeat-end ng-repeat="option in choice.options |orderBy:'nom'"> <span uib-tooltip="place mini : {{option.place_min}} place maxi : {{option.place_maxi}}"> {{option.nom}} </span> </th>
+        <th class="parasite" ng-repeat-start="choice in $ctrl.awesomeChoice |orderBy:'id'"> </th>
+        <th ng-repeat-end ng-repeat="option in choice.options |orderBy:'id'"> <span uib-tooltip="place mini : {{option.place_min}} place maxi : {{option.place_maxi}}"> {{option.nom}} </span> </th>
      
     </tr>
   </thead>
@@ -78,7 +78,7 @@
       
   <th class ="parasite"  ng-repeat-start="con in student.consultation |orderBy:['id_choix','id_option']"> </th>
  <th ng-if="con.arguments !== undefined" class ="argument" > 
-    <span uib-tooltip=' preference : {{con.preference}}  argument : {{con.arguments}} ' class = "argument"> {{con.bids}}  </span>
+    <span uib-tooltip=' preference : {{con.preference}}  argument : {{con.arguments}} ' class = "argument">  {{con.bids}}  </span>
      </th>
 <th ng-if="con.arguments == undefined" ng-repeat-end> 
   <span uib-tooltip="preference : {{con.preference}} "> {{con.bids}}   </span>
@@ -104,7 +104,7 @@
  <p> caption </p>
  <ul>
    <li>  <span class="argument"> argument </span> </li>
-   <li> <span style="background-color: yellow">extra_case </span> </li>
+   <li> <span style="background-color: yellow"> Special needs </span> </li>
  </ul>
 
   </div>
