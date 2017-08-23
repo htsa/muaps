@@ -19,12 +19,14 @@ export class RequestController {
     this.student = {};
     this.models = {
     };
+    this.element_select = {};
     this.request = []; // requete.
     this.awesomeStudent = [];
     this.nameFile = this.$rootScope.file_name;
     this.$rootScope.file_name = this.nameFile;
     this.models_second = {
     };
+    this.scale_of_value = {};
     $scope.model = this.models_second;
 
     $scope.data = {
@@ -34,10 +36,19 @@ export class RequestController {
       liste_droite: this.models_second,
     };
 
+    $scope.request = this.request
+
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('thing');
     });
+
+      $scope.$watch("request", function (){
+        console.log("bla bla");
+    }, true);
+
   }
+
+
 
   $onInit() {
 
@@ -142,6 +153,8 @@ export class RequestController {
       console.log("on part d un 2");
     }
   };
+
+  
 
   ChargerFichierbis() {
     if (!/json$/.test(this.nameFile)) {
@@ -362,31 +375,160 @@ export class RequestController {
   }
 
 
-  choiceStudent(item, parcours, choix, raison, valeur) {
+  choiceStudent(item, choix, option, raison, valeur, idchoix, idoption) {
 
-    this.request = parcours + "." + choix + "." + raison + " = " + valeur;
-    
+
+    if(this.element_select.content == "choix"){
+      
+      this.request[this.element_select.place] 
+
+
+    }
+
+    console.log(option);
+    var nom = choix + "." + option.nom + "." + raison;
+    var objet = { label: nom, id: idoption, type: "choix",idparent : idchoix ,critere : raison};
+
+    var operateur = { label: "=", type: "operator" };
+    var value = { label: valeur, type: "valeur" };
+
+if(this.element_select.hasOwnProperty("content")){
+    if(this.element_select.content["type"] == "choix"){
+      console.log("on passe dans le if")
+      this.request[this.element_select.place] = objet;
+      if( raison == "arguments"){
+        this.request[this.element_select.place + 1] = operateur;
+      }
+      return
+    }
+  }
+
+    this.request.push(objet);
+    this.request.push(operateur);
+    this.request.push(value);
+
+
+    /*console.log(this.awesomeChoice);
+    console.log("choice");
+    console.log(this.choice);
+    console.log(this.request);
     var tab = {};
     for (var j = 0; j < item.length; j++) {
       console.log(item[j]);
       tab[item[j]] = this.student[item[j]];
     }
 
-    this.awesomeStudent = tab;
+    this.awesomeStudent = tab;*/
+    this.doRequest();
   }
+
+  operator(operator) {
+    var flag = this.request.length - 1;
+
+    if(this.element_select["type"]=="connector")
+
+    if (flag == 0 || this.request[flag]["type"] != "valeur" || this.element_select["type"] != "connector") {
+      return;
+    }
+
+
+
+    var operateur = { label: operator, type: "operateur" }
+    this.request.push(operateur)
+  }
+
+  changementOperator(operator){
+    console.log("on entre dans la fonction");
+
+    if(this.element_select.hasOwnProperty("content")){
+      if(this.element_select.content["type"] == "operator"){
+        var newOperator = {label : operator , type : "operator"};
+        this.request[this.element_select.place] = newOperator;
+      }
+    }
+
+  }
+
+    changeValue(value){
+     // var newvalue = {label : value , type : "valeur"}
+    this.request[this.element_select.place]["label"] = value ;
+  }
+
+  test(o){
+
+    console.log("putain");
+  }
+
+  doRequest(){
+
+for(var i = 0; i <= this.request.length-2; i = i+3){
+
+  var item = this.request[i];
+  var operateur = this.request[i+1];
+  var value = this.request[i+2]["label"];
+
+  var idparent = item["idparent"];
+  var idoption = item["id"];
+  var raison = item["critere"];
+  console.log(value)
+if(operateur.label = "=" || item[raison] == "arguments"){
+
+ var itemfin = this.choice[idparent]["option"][idoption]["affect"][raison][value];
+  console.log(this.awesomeStudent);
+}
+  }
+
+    var tab = {};
+    for (var j = 0; j < itemfin.length; j++) {
+      console.log(itemfin[j]);
+      tab[itemfin[j]] = this.student[itemfin[j]];
+    }
+
+    this.awesomeStudent = tab;
+  
+  }
+
+  switchRequest(element,position){
+
+    this.scale_of_value.bool = false;
+
+if(position == this.element_select.place){ // permet de deselectionner un element 
+  this.element_select = {}
+  console.log(this.element_select);
+}
+else{
+    this.element_select.content = element;
+    this.element_select.place = position;
+    
+    if(element.type == "valeur"){
+      if(this.request[position-2]["critere"] == "bids" || this.request[position-2]["critere"] == "pref"){
+        this.scale_of_value.bool = true;
+        var idchoix = this.request[position-2]["idparent"] ;
+        var idoption = this.request[position-2]["id"] ;
+        var critere = this.request[position-2]["critere"] ;
+        
+    this.scale_of_value.content= this.choice[idchoix]['option'][idoption]['affect'][critere]
+      
+
+      }
+    } 
+
+    console.log(this.element_select);
+  }
+}
+
+
 
   choiceAllStudent() {
     this.awesomeStudent = this.student;
     console.log(this.awesomeStudent);
     this.awesomeStudent.toString();
-    
+
   }
 
   coloration(item, bool) {
-
     for (var j = 0; j < item.length; j++) {
       this.student[item[j]]["color"] = bool;
-      console.log(this.student[item[j]]);
     }
 
   }
@@ -486,18 +628,33 @@ export class RequestController {
 
   }
 
-  count(item) {
-  
-  console.log(Array.isArray(this.awesomeStudent))
-   var valeur = 0 ;
-  
- for(var i = 0 ;i < item.length;i ++ ){
-     if (this.awesomeStudent.hasOwnProperty(item[i]))
-     valeur++;
+  count(item) { // fonction qui compte parmis les étudiant combien on cette propriete.
+
+
+    var valeur = 0;
+
+    for (var i = 0; i < item.length; i++) {
+      if (this.awesomeStudent.hasOwnProperty(item[i]))
+        valeur++;
+    }
+    return valeur;
+    // return item.length;
+
+  }
+
+  //permet de savoir si il y a des enfants
+
+  countSon(tab){ 
+    var valeur = 0;
+   for(var prop in tab){
+     valeur = valeur + this.count(tab[prop])
    }
-   return valeur;
-  // return item.length;
-  
+return valeur;
+
+  }
+
+  countSimple(item){ // fonction qui permet de compter le nombre d'element 
+    return item.length ; 
   }
 
   saveCsv = function () {
@@ -544,9 +701,7 @@ export class RequestController {
 
   }
 
-  operator(operator) {
-    this.request = this.request + operator;
-  }
+
 
 
 

@@ -29,18 +29,23 @@
   </div>
 
   <div class="cadre request_zone col-md-12">
-    request zone   
+    request zone   {{request}}
     <br/>
-    {{$ctrl.request}}
+    <span ng-repeat="(position,request) in $ctrl.request"   ng-click="$ctrl.switchRequest(request,position)" ng-style="$ctrl.element_select.place == position && {'background-color': 'yellow'}"> {{request.label}} </span>
  <br/>
  <form>
    <button type="submit" class="btn btn-primary" ng-click="$ctrl.operator('&&')">and</button>
    <button type="submit" class="btn btn-primary" ng-click="$ctrl.operator('||')">or</button>
    <button type="submit" class="btn btn-primary" ng-click="$ctrl.operator('&|')">and not </button>
-   <button type="submit" class="btn btn-primary" ng-click="$ctrl."> < </button>
-   <button type="submit" class="btn btn-primary" ng-click="$ctrl."> > </button>
-   <button type="submit" class="btn btn-primary" ng-click="$ctrl."> = </button>
+   <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('<')" > < </button>
+   <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('<=')" > <= </button>
+   <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('=')" > > </button>
+   <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('>')" > = </button>
+   <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('>=')" > >= </button>
  </form>
+
+ <!-- <span ng-repeat=" (value, candidat)in $ctrl.choice[$ctrl.element_select.content.idparent]['option'][$ctrl.element_select.content.idoption]['affect'][$ctrl.element_select.content.critere]"> {{value}} </span> -->
+ <span ng-if=" $ctrl.scale_of_value.bool== true"> <span ng-repeat="(value,people) in $ctrl.scale_of_value.content" ng-click="$ctrl.changeValue(value)"> {{value}} </span></span>
   </div>
 
   <div id="choice" class="cadre col-md-4">
@@ -63,16 +68,16 @@
             <label for="option{{nameOption}}">{{option.nom}}</label>
 
             <ul>
-              <li class="tree" ng-repeat=" (nameValeur, valeur) in option.affect">
+              <li class="tree" ng-repeat=" (nameValeur, valeur) in option.affect" ng-if="$ctrl.countSon(valeur) > 0 " >
                 <input class="open/close" type="checkbox" id="{{nameOption}}{{nameValeur}}" checked="checked" />
                 <i class="fa fa-angle-double-right"></i>
                 <i class="fa fa-angle-double-down"></i>
                 <label for="{{nameOption}}{{nameValeur}}">{{nameValeur}}</label>
 
                 <ul>
-                  <li ng-repeat="(nameValue, student)  in valeur" ng-click="$ctrl.choiceStudent(student, choix.nom, option.nom, nameValeur, nameValue) " ng-mouseover="$ctrl.coloration(student,true)"
-                    ng-mouseleave="$ctrl.coloration(student,false)" ng-if="$ctrl.count(student) > 0">
-                    ({{$ctrl.count(student)}}) {{nameValue}} 
+                  <li ng-repeat="(nameValue, student)  in valeur" ng-click="$ctrl.choiceStudent(student, choix.nom, option, nameValeur, nameValue, nameChoix, nameOption) " ng-mouseover="$ctrl.coloration(student,true)"
+                    ng-mouseleave="$ctrl.coloration(student,false)" ng-if="$ctrl.count(student) > 0 ">
+                    ({{$ctrl.count(student)}}) {{nameValue}}  
                   </li>
                 </ul>
               </li>
@@ -112,7 +117,7 @@
             <h4> {{option.nom}} {{option.max}} places</h4>
 
             <div class="cadrebis container-element box box-blue" ng-repeat="(type, affect) in option.affect_real">
-              <h5> {{type}} ({{$ctrl.count(affect)}}) <button type="button" ng-click="$ctrl.selection(choice, affect)"> send here </button>                </h5>
+              <h5> {{type}} ({{$ctrl.countSimple(affect)}}) <button type="button" ng-click="$ctrl.selection(choice, affect)"> send here </button>                </h5>
               <ul dnd-list="affect"  dnd-drop="$ctrl.fctlog(item, choice)">
                 <!-- dnd-allowed-types="choice.allowedTypes" -->
                 <li ng-repeat="item in affect" dnd-draggable="item" dnd-moved="affect.splice($index,1)" dnd-effect-allowed="move">
