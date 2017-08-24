@@ -382,6 +382,10 @@ export class RequestController {
     this.awesomeStudent = this.student;
   }
 
+  deleterequest(){
+    this.request = [];
+    this.choiceAllStudent()
+  }
 
   choiceStudent(item, choix, option, raison, valeur, idchoix, idoption) {
 
