@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
-      <h1 class="page-header"> request system</h1>
+      <h1 class="page-header"> Request System</h1>
     </div>
   </div>
 
@@ -29,7 +29,7 @@
   </div>
 
   <div class="cadre request_zone col-md-12">
-    request zone   {{request}}
+    request zone   {{total.request.length}}
     <br/>
     <span ng-repeat="(position,request) in $ctrl.request"   ng-click="$ctrl.switchRequest(request,position)" ng-style="$ctrl.element_select.place == position && {'background-color': 'yellow'}"> {{request.label}} </span>
  <br/>

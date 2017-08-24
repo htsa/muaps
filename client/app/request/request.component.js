@@ -49,8 +49,9 @@ export class RequestController {
     });
 
     $scope.$watch("request", function () {
-    
-      $scope.total.doRequest();
+    if($scope.total.request.length >0){
+      console.log($scope.total.request.length)
+      $scope.total.doRequest();}
     }, true);
 
   }
@@ -225,7 +226,7 @@ export class RequestController {
     })
 
   };
-
+/*
   fcttest(param1) {
     param1.test = param1.test + 1;
     console.log("pourquoi ?");
@@ -245,7 +246,7 @@ export class RequestController {
     item.test = 3;
     console.log(item)
     console.log("insertion");
-  }
+  }*/
 
   ChargerFichier() {
     if (!/json$/.test(this.nameFile)) {
@@ -487,7 +488,7 @@ export class RequestController {
 
     if (signe == "<") {
       for (var prop in tab) {
-        if (value < prop) {
+        if (prop < value) {
           tableau_final = tableau_final.concat(tab[prop])
         }
       }
@@ -496,7 +497,7 @@ export class RequestController {
 
     if (signe == "<=") {
       for (var prop in tab) {
-        if (value <= prop) {
+        if (prop <= value) {
           tableau_final = tableau_final.concat(tab[prop])
         }
       }
@@ -504,14 +505,14 @@ export class RequestController {
 
     if (signe == ">") {
       for (var prop in tab) {
-        if (value > prop) {
+        if (prop > value) {
           tableau_final = tableau_final.concat(tab[prop])
         }
       }
     }
     if (signe == ">=") {
       for (var prop in tab) {
-        if (value >= prop) {
+        if (prop >= value) {
           tableau_final = tableau_final.concat(tab[prop])
         }
       }
@@ -542,6 +543,7 @@ console.log("on est dans la fonction")
 
       tab2.forEach(function (element) {
         if (tab.indexOf(element) == -1) {
+          console.log("ici on passe bien dans le ou")
           result.push(element)
         }
 
@@ -549,6 +551,20 @@ console.log("on est dans la fonction")
 
     }
     if (connector == "&|") {
+      console.log("on passe bien dans et pas ")
+      result = tab;
+
+        tab2.forEach(function (element) {
+
+        if (result.indexOf(element) >=0) {
+
+          var tmp = result.indexOf(element)
+          result.splice(tmp,1)
+
+        }
+
+      }, this);
+
 
     }
 
@@ -562,12 +578,12 @@ console.log("on est dans la fonction")
 
     var tableau_initial = [] // tableau de base contenant tout les étudiants 
     for(var prop in this.student){
-      var tmp = this.student[prop]["id"]
+      var tmp = prop
       tableau_initial.push(tmp)
     }
     var fin = [];
 
-    /*   var item = this.request[0];
+       var item = this.request[0];
         var signe = this.request[ 1]["label"];
         var value = this.request[2]["label"];
 
@@ -577,17 +593,12 @@ console.log("on est dans la fonction")
 
         var tableau_pre_traitement = this.choice[idparent]["option"][idoption]["affect"][raison]
 
-        tableau_initial = this.typeOperator(tableau_pre_traitement, signe, value);
-        tableau_initial= this.doRequestAux(tableau_initial,"&&",fin)
+        tableau_pre_traitement = this.typeOperator(tableau_pre_traitement, signe, value);
+        tableau_initial= this.doRequestAux(tableau_initial,"&&",tableau_pre_traitement)
     
 
-*/
-    for (var i = 3; i < this.request.length; i++) {
-      console.log(i)
 
-
-      if (this.request[i]["type"]== "choix")  {
-        console.log("propriete")
+    for (var i = 4; i < this.request.length; i = i+4) {
 
         var item = this.request[i];
         var signe = this.request[i + 1]["label"];
@@ -601,45 +612,26 @@ console.log("on est dans la fonction")
 
         fin = this.typeOperator(tableau_pre_traitement, signe, value);
         
-        i = i+2;
 
-        if (this.request[i+1]["type"]=="operateur") {
-        console.log("on arrive ici")
-       tableau_initial= this.doRequestAux(tableau_initial,this.request[i]["label"],fin)
-      }
-
+        console.log("on est encore dans le for")
+       tableau_initial= this.doRequestAux(tableau_initial,this.request[i-1]["label"],fin)
+      console.log(tableau_initial)
       }
 
       
-    }
+    
 
-    /*
-    for(var i = 0; i <= this.request.length-2; i = i+3){
     
-      var item = this.request[i];
-      var operateur = this.request[i+1];
-      var value = this.request[i+2]["label"];
-    
-      var idparent = item["idparent"];
-      var idoption = item["id"];
-      var raison = item["critere"];
-      console.log(value)
-    if(operateur.label = "=" || item[raison] == "arguments"){
-    
-     var itemfin = this.choice[idparent]["option"][idoption]["affect"][raison][value];
-      console.log(this.awesomeStudent);
-    }
-    }
-    var itemfin = tableau_initial
+   
 
     var tab = {};
-    for (var j = 0; j < itemfin.length; j++) {
-      console.log(itemfin[j]);
-      tab[itemfin[j]] = this.student[itemfin[j]];
+    for (var j = 0; j < tableau_initial.length; j++) {
+      console.log(tableau_initial[j]);
+      tab[tableau_initial[j]] = this.student[tableau_initial[j]];
     }
 
     this.awesomeStudent = tab;
-*/
+
   }
 
   switchRequest(element, position) {
