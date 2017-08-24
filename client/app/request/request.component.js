@@ -19,7 +19,10 @@ export class RequestController {
     this.student = {};
     this.models = {
     };
-    this.element_select = {};
+    this.element_select = {
+      content: {},
+      place: {}
+    };
     this.request = []; // requete.
     this.awesomeStudent = [];
     this.nameFile = this.$rootScope.file_name;
@@ -36,14 +39,18 @@ export class RequestController {
       liste_droite: this.models_second,
     };
 
+
+    $scope.total = this;
+
     $scope.request = this.request
 
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('thing');
     });
 
-      $scope.$watch("request", function (){
-        console.log("bla bla");
+    $scope.$watch("request", function () {
+    
+      $scope.total.doRequest();
     }, true);
 
   }
@@ -154,7 +161,7 @@ export class RequestController {
     }
   };
 
-  
+
 
   ChargerFichierbis() {
     if (!/json$/.test(this.nameFile)) {
@@ -377,36 +384,34 @@ export class RequestController {
 
   choiceStudent(item, choix, option, raison, valeur, idchoix, idoption) {
 
+    var taille = this.request.length - 1;
 
-    if(this.element_select.content == "choix"){
-      
-      this.request[this.element_select.place] 
+    console.log(taille);
 
+    if (taille == -1 || this.request[taille]["type"] == "parenthese" || this.request[taille]["type"] == "operateur") {
 
-    }
+      console.log("génial tu dechires");
+      var nom = choix + "." + option.nom + "." + raison;
+      var objet = { label: nom, id: idoption, type: "choix", idparent: idchoix, critere: raison };
 
-    console.log(option);
-    var nom = choix + "." + option.nom + "." + raison;
-    var objet = { label: nom, id: idoption, type: "choix",idparent : idchoix ,critere : raison};
+      var operateur = { label: "=", type: "operator" };
+      var value = { label: valeur, type: "valeur" };
 
-    var operateur = { label: "=", type: "operator" };
-    var value = { label: valeur, type: "valeur" };
-
-if(this.element_select.hasOwnProperty("content")){
-    if(this.element_select.content["type"] == "choix"){
-      console.log("on passe dans le if")
-      this.request[this.element_select.place] = objet;
-      if( raison == "arguments"){
-        this.request[this.element_select.place + 1] = operateur;
+      if (this.element_select.hasOwnProperty("content")) {
+        if (this.element_select.content["type"] == "choix") {
+          console.log("on passe dans le if")
+          this.request[this.element_select.place] = objet;
+          if (raison == "arguments") {
+            this.request[this.element_select.place + 1] = operateur;
+          }
+          return
+        }
       }
-      return
+
+      this.request.push(objet);
+      this.request.push(operateur);
+      this.request.push(value);
     }
-  }
-
-    this.request.push(objet);
-    this.request.push(operateur);
-    this.request.push(value);
-
 
     /*console.log(this.awesomeChoice);
     console.log("choice");
@@ -419,64 +424,213 @@ if(this.element_select.hasOwnProperty("content")){
     }
 
     this.awesomeStudent = tab;*/
-    this.doRequest();
+   // this.doRequest();
   }
 
   operator(operator) {
     var flag = this.request.length - 1;
 
-    if(this.element_select["type"]=="connector")
+    var operateur = { label: operator, type: "operateur" }
 
-    if (flag == 0 || this.request[flag]["type"] != "valeur" || this.element_select["type"] != "connector") {
-      return;
+    console.log(this.element_select["content"]["type"])
+
+    if (this.element_select["content"]["type"] == "operateur") {
+      this.request[this.element_select["place"]] = operateur
+      console.log("on modifie la requete")
+      return
     }
 
-
-
-    var operateur = { label: operator, type: "operateur" }
+    if (flag == -1 || this.request[flag]["type"] != "valeur") {
+      console.log("mauvaise grammaire")
+      return;
+    }
     this.request.push(operateur)
+
+
   }
 
-  changementOperator(operator){
+  changementOperator(operator) {
     console.log("on entre dans la fonction");
 
-    if(this.element_select.hasOwnProperty("content")){
-      if(this.element_select.content["type"] == "operator"){
-        var newOperator = {label : operator , type : "operator"};
+    if (this.element_select.hasOwnProperty("content")) {
+      if (this.element_select.content["type"] == "operator") {
+        var newOperator = { label: operator, type: "operator" };
         this.request[this.element_select.place] = newOperator;
       }
     }
 
   }
 
-    changeValue(value){
-     // var newvalue = {label : value , type : "valeur"}
-    this.request[this.element_select.place]["label"] = value ;
+  changeValue(value) {
+    // var newvalue = {label : value , type : "valeur"}
+    this.request[this.element_select.place]["label"] = value;
   }
 
-  test(o){
+  test(o) {
 
     console.log("putain");
   }
 
-  doRequest(){
 
-for(var i = 0; i <= this.request.length-2; i = i+3){
+  typeOperator(tab, signe, value) { // cherche dans un tableau toutes les valeurs remplisant la condition signe value
+    var tableau_final = []
 
-  var item = this.request[i];
-  var operateur = this.request[i+1];
-  var value = this.request[i+2]["label"];
+    console.log(tab);
+    console.log(signe);
+    console.log(value);
 
-  var idparent = item["idparent"];
-  var idoption = item["id"];
-  var raison = item["critere"];
-  console.log(value)
-if(operateur.label = "=" || item[raison] == "arguments"){
+    if (signe == "=") {
+      if (tab.hasOwnProperty(value)) {
+        tableau_final = tab[value];
+      }
+    }
 
- var itemfin = this.choice[idparent]["option"][idoption]["affect"][raison][value];
-  console.log(this.awesomeStudent);
-}
+    if (signe == "<") {
+      for (var prop in tab) {
+        if (value < prop) {
+          tableau_final = tableau_final.concat(tab[prop])
+        }
+      }
+
+    }
+
+    if (signe == "<=") {
+      for (var prop in tab) {
+        if (value <= prop) {
+          tableau_final = tableau_final.concat(tab[prop])
+        }
+      }
+    }
+
+    if (signe == ">") {
+      for (var prop in tab) {
+        if (value > prop) {
+          tableau_final = tableau_final.concat(tab[prop])
+        }
+      }
+    }
+    if (signe == ">=") {
+      for (var prop in tab) {
+        if (value >= prop) {
+          tableau_final = tableau_final.concat(tab[prop])
+        }
+      }
+    }
+
+    return (tableau_final);
   }
+
+  doRequestAux(tab, connector, tab2) { // permet de faire les jonctions
+console.log(tab)
+console.log(connector)
+console.log(tab2)
+console.log("on est dans la fonction")
+    var result = []
+
+    if (connector == "&&") {
+      tab2.forEach(function (element) {
+        if (tab.indexOf(element) > -1) {
+          result.push(element)
+        }
+
+      }, this);
+
+    }
+    if (connector == "||") {
+
+      result = tab;
+
+      tab2.forEach(function (element) {
+        if (tab.indexOf(element) == -1) {
+          result.push(element)
+        }
+
+      }, this);
+
+    }
+    if (connector == "&|") {
+
+    }
+
+    console.log("le resultat est")
+    console.log(result)
+    return result
+
+  }
+
+  doRequest() {
+
+    var tableau_initial = [] // tableau de base contenant tout les étudiants 
+    for(var prop in this.student){
+      var tmp = this.student[prop]["id"]
+      tableau_initial.push(tmp)
+    }
+    var fin = [];
+
+    /*   var item = this.request[0];
+        var signe = this.request[ 1]["label"];
+        var value = this.request[2]["label"];
+
+        var idparent = item["idparent"];
+        var idoption = item["id"];
+        var raison = item["critere"];
+
+        var tableau_pre_traitement = this.choice[idparent]["option"][idoption]["affect"][raison]
+
+        tableau_initial = this.typeOperator(tableau_pre_traitement, signe, value);
+        tableau_initial= this.doRequestAux(tableau_initial,"&&",fin)
+    
+
+*/
+    for (var i = 3; i < this.request.length; i++) {
+      console.log(i)
+
+
+      if (this.request[i]["type"]== "choix")  {
+        console.log("propriete")
+
+        var item = this.request[i];
+        var signe = this.request[i + 1]["label"];
+        var value = this.request[i + 2]["label"];
+
+        var idparent = item["idparent"];
+        var idoption = item["id"];
+        var raison = item["critere"];
+
+        var tableau_pre_traitement = this.choice[idparent]["option"][idoption]["affect"][raison]
+
+        fin = this.typeOperator(tableau_pre_traitement, signe, value);
+        
+        i = i+2;
+
+        if (this.request[i+1]["type"]=="operateur") {
+        console.log("on arrive ici")
+       tableau_initial= this.doRequestAux(tableau_initial,this.request[i]["label"],fin)
+      }
+
+      }
+
+      
+    }
+
+    /*
+    for(var i = 0; i <= this.request.length-2; i = i+3){
+    
+      var item = this.request[i];
+      var operateur = this.request[i+1];
+      var value = this.request[i+2]["label"];
+    
+      var idparent = item["idparent"];
+      var idoption = item["id"];
+      var raison = item["critere"];
+      console.log(value)
+    if(operateur.label = "=" || item[raison] == "arguments"){
+    
+     var itemfin = this.choice[idparent]["option"][idoption]["affect"][raison][value];
+      console.log(this.awesomeStudent);
+    }
+    }
+    var itemfin = tableau_initial
 
     var tab = {};
     for (var j = 0; j < itemfin.length; j++) {
@@ -485,37 +639,41 @@ if(operateur.label = "=" || item[raison] == "arguments"){
     }
 
     this.awesomeStudent = tab;
-  
+*/
   }
 
-  switchRequest(element,position){
+  switchRequest(element, position) {
 
     this.scale_of_value.bool = false;
 
-if(position == this.element_select.place){ // permet de deselectionner un element 
-  this.element_select = {}
-  console.log(this.element_select);
-}
-else{
-    this.element_select.content = element;
-    this.element_select.place = position;
-    
-    if(element.type == "valeur"){
-      if(this.request[position-2]["critere"] == "bids" || this.request[position-2]["critere"] == "pref"){
-        this.scale_of_value.bool = true;
-        var idchoix = this.request[position-2]["idparent"] ;
-        var idoption = this.request[position-2]["id"] ;
-        var critere = this.request[position-2]["critere"] ;
-        
-    this.scale_of_value.content= this.choice[idchoix]['option'][idoption]['affect'][critere]
-      
-
+    if (position == this.element_select.place) { // permet de deselectionner un element 
+      this.element_select = {
+        content: {},
+        place: {}
       }
-    } 
+      console.log(this.element_select);
+    }
+    else {
+      this.element_select.content = element;
+      this.element_select.place = position;
 
-    console.log(this.element_select);
+      if (element.type == "valeur") {
+        if (this.request[position - 2]["critere"] == "bids" || this.request[position - 2]["critere"] == "pref") {
+          this.scale_of_value.bool = true;
+          var idchoix = this.request[position - 2]["idparent"];
+          var idoption = this.request[position - 2]["id"];
+          var critere = this.request[position - 2]["critere"];
+
+          this.scale_of_value.content = this.choice[idchoix]['option'][idoption]['affect'][critere]
+
+
+        }
+      }
+
+      console.log(this.element_select);
+    }
   }
-}
+
 
 
 
@@ -644,17 +802,17 @@ else{
 
   //permet de savoir si il y a des enfants
 
-  countSon(tab){ 
+  countSon(tab) {
     var valeur = 0;
-   for(var prop in tab){
-     valeur = valeur + this.count(tab[prop])
-   }
-return valeur;
+    for (var prop in tab) {
+      valeur = valeur + this.count(tab[prop])
+    }
+    return valeur;
 
   }
 
-  countSimple(item){ // fonction qui permet de compter le nombre d'element 
-    return item.length ; 
+  countSimple(item) { // fonction qui permet de compter le nombre d'element 
+    return item.length;
   }
 
   saveCsv = function () {
