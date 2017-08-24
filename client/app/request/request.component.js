@@ -49,8 +49,8 @@ export class RequestController {
     });
 
     $scope.$watch("request", function () {
+      console.log("on vous observe")
     if($scope.total.request.length >0){
-      console.log($scope.total.request.length)
       $scope.total.doRequest();}
     }, true);
 
@@ -384,6 +384,7 @@ export class RequestController {
 
   deleterequest(){
     this.request = [];
+    this.$scope.request = this.request
     this.choiceAllStudent()
   }
 
@@ -395,7 +396,7 @@ export class RequestController {
 
     if (taille == -1 || this.request[taille]["type"] == "parenthese" || this.request[taille]["type"] == "operateur") {
 
-      console.log("génial tu dechires");
+      
       var nom = choix + "." + option.nom + "." + raison;
       var objet = { label: nom, id: idoption, type: "choix", idparent: idchoix, critere: raison };
 
