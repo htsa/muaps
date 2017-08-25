@@ -294,3 +294,12 @@ h5 {
 .information{
     width: 100%;
 }
+
+.btn .emoji{
+padding: 0px 0px 0px 0px;
+color : red;
+}
+
+.btnemoji{
+  padding:  0px 3px 0px 3px
+}

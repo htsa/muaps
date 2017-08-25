@@ -50,8 +50,9 @@ export class RequestController {
 
     $scope.$watch("request", function () {
       console.log("on vous observe")
-    if($scope.total.request.length >0){
-      $scope.total.doRequest();}
+      if ($scope.total.request.length > 0) {
+        $scope.total.doRequest();
+      }
     }, true);
 
   }
@@ -226,27 +227,27 @@ export class RequestController {
     })
 
   };
-/*
-  fcttest(param1) {
-    param1.test = param1.test + 1;
-    console.log("pourquoi ?");
-  }
-  fctstart(item) { // ne pas utiliser dnd-start
-    console.log(item);
-    console.log("commencer");
-  }
-  fctend(item, place) { // modifie l'objet de base.
-    console.log(place + " place");
-    item.test = this.Ajout(item.test, place)
-    console.log(item);
-    console.log("fini");
-  }
-
-  fctinsert(item) { // modifie l'objet creer.
-    item.test = 3;
-    console.log(item)
-    console.log("insertion");
-  }*/
+  /*
+    fcttest(param1) {
+      param1.test = param1.test + 1;
+      console.log("pourquoi ?");
+    }
+    fctstart(item) { // ne pas utiliser dnd-start
+      console.log(item);
+      console.log("commencer");
+    }
+    fctend(item, place) { // modifie l'objet de base.
+      console.log(place + " place");
+      item.test = this.Ajout(item.test, place)
+      console.log(item);
+      console.log("fini");
+    }
+  
+    fctinsert(item) { // modifie l'objet creer.
+      item.test = 3;
+      console.log(item)
+      console.log("insertion");
+    }*/
 
   ChargerFichier() {
     if (!/json$/.test(this.nameFile)) {
@@ -382,21 +383,25 @@ export class RequestController {
     this.awesomeStudent = this.student;
   }
 
-  deleterequest(){
+  deleterequest() {
     this.request = [];
     this.$scope.request = this.request
     this.choiceAllStudent()
   }
 
-  choiceStudent(item, choix, option, raison, valeur, idchoix, idoption) {
+  choiceStudent(choix, option, raison, valeur, idchoix, idoption) {
+
+    if(valeur == -1 && this.element_select.content["type"] != "choix"){
+      return
+    }
 
     var taille = this.request.length - 1;
 
     console.log(taille);
 
-    if (taille == -1 || this.request[taille]["type"] == "parenthese" || this.request[taille]["type"] == "operateur") {
+    if (taille == -1 || this.request[taille]["type"] == "parenthese" || this.request[taille]["type"] == "operateur" || this.element_select.content["type"] == "choix") {
 
-      
+
       var nom = choix + "." + option.nom + "." + raison;
       var objet = { label: nom, id: idoption, type: "choix", idparent: idchoix, critere: raison };
 
@@ -430,19 +435,22 @@ export class RequestController {
     }
 
     this.awesomeStudent = tab;*/
-   // this.doRequest();
+    // this.doRequest();
   }
 
   operator(operator) {
     var flag = this.request.length - 1;
-
+    console.log("pourquoi tu passes pas ici")
     var operateur = { label: operator, type: "operateur" }
 
-    console.log(this.element_select["content"]["type"])
+
 
     if (this.element_select["content"]["type"] == "operateur") {
       this.request[this.element_select["place"]] = operateur
       console.log("on modifie la requete")
+      if (operator == "||") {
+        this.choiceAllStudent();
+      }
       return
     }
 
@@ -451,7 +459,9 @@ export class RequestController {
       return;
     }
     this.request.push(operateur)
-
+    if (operator == "||") {
+      this.choiceAllStudent();
+    }
 
   }
 
@@ -527,10 +537,10 @@ export class RequestController {
   }
 
   doRequestAux(tab, connector, tab2) { // permet de faire les jonctions
-console.log(tab)
-console.log(connector)
-console.log(tab2)
-console.log("on est dans la fonction")
+    console.log(tab)
+    console.log(connector)
+    console.log(tab2)
+    console.log("on est dans la fonction")
     var result = []
 
     if (connector == "&&") {
@@ -559,12 +569,12 @@ console.log("on est dans la fonction")
       console.log("on passe bien dans et pas ")
       result = tab;
 
-        tab2.forEach(function (element) {
+      tab2.forEach(function (element) {
 
-        if (result.indexOf(element) >=0) {
+        if (result.indexOf(element) >= 0) {
 
           var tmp = result.indexOf(element)
-          result.splice(tmp,1)
+          result.splice(tmp, 1)
 
         }
 
@@ -582,52 +592,49 @@ console.log("on est dans la fonction")
   doRequest() {
 
     var tableau_initial = [] // tableau de base contenant tout les étudiants 
-    for(var prop in this.student){
+    for (var prop in this.student) {
       var tmp = prop
       tableau_initial.push(tmp)
     }
     var fin = [];
 
-       var item = this.request[0];
-        var signe = this.request[ 1]["label"];
-        var value = this.request[2]["label"];
+    var item = this.request[0];
+    var signe = this.request[1]["label"];
+    var value = this.request[2]["label"];
 
-        var idparent = item["idparent"];
-        var idoption = item["id"];
-        var raison = item["critere"];
+    var idparent = item["idparent"];
+    var idoption = item["id"];
+    var raison = item["critere"];
 
-        var tableau_pre_traitement = this.choice[idparent]["option"][idoption]["affect"][raison]
+    var tableau_pre_traitement = this.choice[idparent]["option"][idoption]["affect"][raison]
 
-        tableau_pre_traitement = this.typeOperator(tableau_pre_traitement, signe, value);
-        tableau_initial= this.doRequestAux(tableau_initial,"&&",tableau_pre_traitement)
-    
+    tableau_pre_traitement = this.typeOperator(tableau_pre_traitement, signe, value);
+    tableau_initial = this.doRequestAux(tableau_initial, "&&", tableau_pre_traitement)
 
 
-    for (var i = 4; i < this.request.length; i = i+4) {
 
-        var item = this.request[i];
-        var signe = this.request[i + 1]["label"];
-        var value = this.request[i + 2]["label"];
+    for (var i = 4; i < this.request.length; i = i + 4) {
 
-        var idparent = item["idparent"];
-        var idoption = item["id"];
-        var raison = item["critere"];
+      var item = this.request[i];
+      var signe = this.request[i + 1]["label"];
+      var value = this.request[i + 2]["label"];
 
-        var tableau_pre_traitement = this.choice[idparent]["option"][idoption]["affect"][raison]
+      var idparent = item["idparent"];
+      var idoption = item["id"];
+      var raison = item["critere"];
 
-        fin = this.typeOperator(tableau_pre_traitement, signe, value);
-        
+      var tableau_pre_traitement = this.choice[idparent]["option"][idoption]["affect"][raison]
 
-        console.log("on est encore dans le for")
-       tableau_initial= this.doRequestAux(tableau_initial,this.request[i-1]["label"],fin)
+      fin = this.typeOperator(tableau_pre_traitement, signe, value);
+
+
+      console.log("on est encore dans le for")
+      tableau_initial = this.doRequestAux(tableau_initial, this.request[i - 1]["label"], fin)
       console.log(tableau_initial)
-      }
+    }
 
-      
-    
 
-    
-   
+
 
     var tab = {};
     for (var j = 0; j < tableau_initial.length; j++) {
@@ -636,6 +643,11 @@ console.log("on est dans la fonction")
     }
 
     this.awesomeStudent = tab;
+    console.log(this.request.length)
+    var dernier_element = this.request.length
+    if (this.request[this.request.length - 1]["label"] == "||") {
+      this.choiceAllStudent();
+    }
 
   }
 
@@ -676,7 +688,6 @@ console.log("on est dans la fonction")
 
   choiceAllStudent() {
     this.awesomeStudent = this.student;
-    console.log(this.awesomeStudent);
     this.awesomeStudent.toString();
 
   }
@@ -701,29 +712,7 @@ console.log("on est dans la fonction")
   fctlog(item, choice) {
 
     console.log(this.consultation_id);
-    /* console.log(item);
-     console.log("c est le choix tant");
-     console.log(choice); /*
-     var newtype = ""; // type de l'objet de base
-     var newtypeobjet = ""; // type de l objet final
-     choice++;
-     for (var i = 0; i < item.type.length; i++) {
-       if (i == 0) {
-         newtype = "a";
-         newtypeobjet = "a";
-       }
-       else if (i == choice) {
-         newtype = newtype + "1";
-         newtypeobjet = newtypeobjet + "0";
-       }
-       else {
-         newtype = newtype + item.type[i];
-         newtypeobjet = newtypeobjet + "1";
-       }
-     }
-     item.type = newtypeobjet;
-     this.student[item.id]["type"] = newtype;
- */
+
 
     var index_to_delete = item.type.indexOf(choice.nom)
     if (index_to_delete >= 0) {
@@ -736,29 +725,70 @@ console.log("on est dans la fonction")
 
   }
 
-  selection(destination, affect) {
+  removeAffect(item, position, tableau) {
+    console.log(item)
+    this.awesomeStudent[item.id]["type"].push(item.type[0])
+    tableau.splice(position, 1)
+  }
+
+  selection(destination, affect, max_place, attribue) {
+    console.log("nombre de place maximun" + max_place)
+    var selectionnee = []
+    var selectionsecond = []
+    var erreur = ""
+
 
     for (var person in this.awesomeStudent) {
       if (this.awesomeStudent[person]["select"]) {
         console.log("on passe le premier if");
+
         // this.fctlog(this.awesomeStudent[person], destination);
-        var item = this.awesomeStudent[person];
 
-
-        var index_to_delete = item.type.indexOf(destination.nom);
-        console.log(index_to_delete);
-        if (index_to_delete >= 0) {
-          var tmp = JSON.stringify(item);
-          tmp = JSON.parse(tmp);
-
-          var stp = this.fctlog(tmp, destination);
-          console.log(stp);
-          affect.push(stp);
-        }
-
+        selectionnee.push(this.awesomeStudent[person])
       }
     }
 
+    console.log("on passe dans le second if")
+    for (var person in selectionnee) {
+      console.log("on passe dans le second for")
+
+      var item = selectionnee[person];
+      console.log(item)
+
+      var index_to_delete = item.type.indexOf(destination.nom);
+      console.log(index_to_delete);
+      if (index_to_delete >= 0) {
+        selectionsecond.push(item)
+      }
+      else {
+        console.log(item)
+        erreur = erreur + item.prenom + " " + item.nom + " est deja affecté a ce choix \n"
+      }
+    }
+    if (selectionsecond.length + attribue <= max_place) {
+      for (var person in selectionsecond) {
+        item = selectionsecond[person]
+
+        var tmp = JSON.stringify(item);
+        tmp = JSON.parse(tmp);
+
+        var stp = this.fctlog(tmp, destination);
+        console.log(stp);
+        affect.push(stp);
+      }
+    }
+    else {
+      var place_restante = max_place - attribue
+      erreur = erreur + " on veut affecter " + selectionnee.length + " etudiant cependant il ne reste que " +place_restante + " places"
+    }
+
+
+
+
+
+    if (erreur != "") {
+      alert(erreur)
+    }
     /*
         for (var person in this.awesomeStudent) {
           if (this.awesomeStudent[person]["select"]) {
@@ -802,10 +832,19 @@ console.log("on est dans la fonction")
   countSon(tab) {
     var valeur = 0;
     for (var prop in tab) {
+
       valeur = valeur + this.count(tab[prop])
     }
     return valeur;
 
+  }
+
+  countStudentAffect(tab) {
+    var valeur = 0;
+    for (var prop in tab) {
+      valeur = valeur + tab[prop].length
+    }
+    return valeur
   }
 
   countSimple(item) { // fonction qui permet de compter le nombre d'element 
