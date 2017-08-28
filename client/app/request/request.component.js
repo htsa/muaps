@@ -38,6 +38,8 @@ export class RequestController {
       liste_gauche: this.models,
       liste_droite: this.models_second,
     };
+    this.parse = []
+    this.nbparentheseouverte = 0;
 
 
     $scope.total = this;
@@ -51,7 +53,8 @@ export class RequestController {
     $scope.$watch("request", function () {
       console.log("on vous observe")
       if ($scope.total.request.length > 0) {
-        $scope.total.doRequest();
+        $scope.total.ParsageRequest();
+      //  $scope.total.doRequestNew()
       }
     }, true);
 
@@ -262,8 +265,8 @@ export class RequestController {
         console.log(response.data);
         this.consultation_id = response.data.consultation;
         console.log(this.consultation_id);
-      
-        
+
+
 
         for (var i = 0; i < this.awesomeChoice.length; ++i) { // pour tout les choix
           var provisoire = this.awesomeChoice[i].nom; // on met le nom du choix dans une variable
@@ -379,6 +382,7 @@ export class RequestController {
 
 
 
+
     }
     console.log(this.student);
     this.awesomeStudent = this.student;
@@ -394,7 +398,7 @@ export class RequestController {
 
   choiceStudent(choix, option, raison, valeur, idchoix, idoption) {
 
-    if(valeur == -1 && this.element_select.content["type"] != "choix"){
+    if (valeur == -1 && this.element_select.content["type"] != "choix") {
       return
     }
 
@@ -402,7 +406,7 @@ export class RequestController {
 
     console.log(taille);
 
-    if (taille == -1 || this.request[taille]["type"] == "parenthese" || this.request[taille]["type"] == "operateur" || this.element_select.content["type"] == "choix") {
+    if (taille == -1 || this.request[taille]["type"] == "parentheseOuvre" || this.request[taille]["type"] == "operateur" || this.element_select.content["type"] == "choix") {
 
 
       var nom = choix + "." + option.nom + "." + raison;
@@ -457,15 +461,33 @@ export class RequestController {
       return
     }
 
-    if (flag == -1 || this.request[flag]["type"] != "valeur") {
-      console.log("mauvaise grammaire")
-      return;
-    }
+    if (flag > -1 || this.request[flag]["type"] == "valeur" || this.request[flag]["type"] == "parentheseFerme") {
+    
     this.request.push(operateur)
     if (operator == "||") {
       this.choiceAllStudent();
     }
 
+  }
+  }
+
+  parenthese(par) {
+    if (par == "(") {
+      if (this.request.length == 0 || this.request[this.request.length - 1]["type"] == "operateur" || this.request[this.request.length - 1]["type"] == "parentheseOuvre") {
+        var obj = { label: "(", type: "parentheseOuvre" }
+        this.request.push(obj)
+        this.nbparentheseouverte++;
+      }
+    }
+    else {
+      if (this.nbparentheseouverte > 0) {
+        if (this.request[this.request.length - 1]["type"] == "valeur" || this.request[this.request.length - 1]["type"] == "parentheseOuvre" || this.request[this.request.length - 1]["type"] == "parentheseFerme") {
+          var obj = { label: ")", type: "parentheseFerme" }
+          this.request.push(obj)
+          this.nbparentheseouverte--;
+        }
+      }
+    }
   }
 
   changementOperator(operator) {
@@ -494,9 +516,6 @@ export class RequestController {
   typeOperator(tab, signe, value) { // cherche dans un tableau toutes les valeurs remplisant la condition signe value
     var tableau_final = []
 
-    console.log(tab);
-    console.log(signe);
-    console.log(value);
 
     if (signe == "=") {
       if (tab.hasOwnProperty(value)) {
@@ -525,11 +544,11 @@ export class RequestController {
 
     if (signe == ">") {
       for (var prop in tab) {
-         prop = Number(prop)
+        prop = Number(prop)
         if (prop > value) {
-         
-          
-          console.log(prop + "est plus grand que "+ value)
+
+
+          console.log(prop + "est plus grand que " + value)
           tableau_final = tableau_final.concat(tab[prop])
         }
       }
@@ -741,9 +760,9 @@ export class RequestController {
     tableau.splice(position, 1)
   }
 
-  selection(destination, affect, max_place, attribue,idchoix) {
+  selection(destination, affect, max_place, attribue, idchoix) {
     console.log("probleme")
-   
+
     var selectionnee = []
     var selectionsecond = []
     var erreur = ""
@@ -790,7 +809,7 @@ export class RequestController {
     }
     else {
       var place_restante = max_place - attribue
-      erreur = erreur + " on veut affecter " + selectionnee.length + " etudiant cependant il ne reste que " +place_restante + " places"
+      erreur = erreur + " on veut affecter " + selectionnee.length + " etudiant cependant il ne reste que " + place_restante + " places"
     }
 
 
@@ -862,37 +881,37 @@ export class RequestController {
     return item.length;
   }
 
-  calculClearing(idoption,idchoix,nb_placerestante,raison){
+  calculClearing(idoption, idchoix, nb_placerestante, raison) {
 
     var tri = []
-    for (var prop in this.choice[idchoix]["option"][idoption]["affect"][raison]){
+    for (var prop in this.choice[idchoix]["option"][idoption]["affect"][raison]) {
       tri.push(prop)
     }
-    tri.sort(function(a, b) {
-  return b - a;
-});
+    tri.sort(function (a, b) {
+      return b - a;
+    });
 
-for(var i = 0; i<tri.length; i++){
-  
-  var compteur = 0;
-  for(var j = 0; j<this.choice[idchoix]["option"][idoption]["affect"][raison][tri[i]].length;j++){
-    var idstudent = this.choice[idchoix]["option"][idoption]["affect"][raison][tri[i]][j]
-    if(this.student[idstudent]["type"].indexOf(idchoix) !=-1){
-      compteur++;
+    for (var i = 0; i < tri.length; i++) {
+
+      var compteur = 0;
+      for (var j = 0; j < this.choice[idchoix]["option"][idoption]["affect"][raison][tri[i]].length; j++) {
+        var idstudent = this.choice[idchoix]["option"][idoption]["affect"][raison][tri[i]][j]
+        if (this.student[idstudent]["type"].indexOf(idchoix) != -1) {
+          compteur++;
+        }
+      }
+      if (compteur <= nb_placerestante) {
+
+        nb_placerestante = nb_placerestante - compteur
+      }
+      else {
+        if (i == 0) {
+          return "∅"
+        }
+        return tri[i - 1]
+      }
     }
-  }
-  if( compteur <= nb_placerestante){
-    
-    nb_placerestante = nb_placerestante - compteur
-  } 
-  else{
-   if(i == 0){
-     return "∅"
-   }
-    return tri[i-1]
-  }
-}
-return tri[tri.length-1]
+    return tri[tri.length - 1]
 
   }
 
@@ -941,9 +960,64 @@ return tri[tri.length-1]
   }
 
 
+  // flag indique si on a traite le premier cas 
+  ParsageRequest() {
+    console.log("on passe dans la fonction")
+    this.parse = [];
+    console.log(this.request.length)
 
+    for (var i = 0; i < this.request.length; i++) {
+      console.log(this.request[i]["type"])
+      console.log(i)
 
+      switch (this.request[i]["type"]) {
+        case "valeur":
+          break;
+        case "operator":
+          break;
+        case "choix":
+          var idparent = this.request[i]["idparent"];
+          var idoption = this.request[i]["id"];
+          var raison = this.request[i]["critere"];
+          var resultat = this.typeOperator(this.choice[idparent]["option"][idoption]["affect"][raison], this.request[i + 1]["label"], this.request[i + 2]["label"]);
+          this.parse.push(resultat)
+          break;
+        case "operateur":
+          this.parse.push(this.request[i]["label"])
+          break;
+        case "parentheseOuvre":
+          this.parse.push(this.request[i]["label"])
+          break;
+        case "parentheseFerme":
+          this.parse.push(this.request[i]["label"])
+      }
+    }
+  }
 
+  doRequestNew(position) {
+
+    while (this.parse.length != 0) {
+      if (this.parse.length > 2) {
+        
+        var tmp = this.doRequestAux(this.parse[0], this.parse[1], this.parse[2])
+        this.parse.splice(position, 3, tmp)
+      }
+      else {
+        var tab = {};
+        for (var j = 0; j < this.parse[0].length; j++) {
+          tab[this.parse[0][j]] = this.student[this.parse[0][j]];
+        }
+
+        this.awesomeStudent = tab;
+        if (this.request[this.request.length - 1]["label"] == "||") {
+          this.choiceAllStudent();
+        }
+        console.log(this.parse.length)
+        return
+      }
+
+    }
+  }
 }
 
 
