@@ -1,110 +1,95 @@
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <h1 class="page-header"> Importation and file visualization </h1>
-    </div>
-  </div>
+
+  
+
+    <h1 class="page-header"> Importation and file visualization </h1>
 
 
 
-  <form class="cadre">
-    <label> Select new (json) file </label>
-    <p class="input-group">
+
+    <div class='row'>
+
+      <form class="cadre col-lg-6 cadrespecial">
+        <label> Select new (json) file </label>
+        <p class="input-group">
 
 
-      <input type="file" ngf-select ng-model="$ctrl.file" name="file">
-      <span class="input-group-btn">
-        <button  type="submit" class="btn btn-primary" ng-click="$ctrl.addFile()">Add file</button>
+          <input type="file" ngf-select ng-model="$ctrl.file" name="file">
+          <span class="input-group-btn">
+        <button  type="submit" class="btn btn-primary" ng-click="$ctrl.addFile()">Go</button>
       </span>
-    </p>
+        </p>
 
-  </form>
+      </form>
 
-  <form class='cadre'>
-    <label> Select existing file</label>
-    <input type="text" ng-model="$ctrl.nameFile">
-    <button type="submit" class="btn btn-primary" ng-click="$ctrl.ChargerFichier()">Go</button>
-    </form>
 
-<!--
-<div class="container">
-  <div class="row">
-    <p class="col-lg-2" ng-click="$ctrl.onglet ='student'">liste des étudiants</p>
-    <p class="col-lg-2" ng-click="$ctrl.onglet ='option'">liste des options</p>
-  </div>
-  <div class="row">
-    <div class="col-lg-9">
-      <ul class="nav nav-tabs nav-stacked col-md-3 col-lg-12 col-sm-6" ng-if="$ctrl.onglet =='student'" ng-repeat="student in $ctrl.awesomeStudent">
-        <li ng-style="student.extra_case != 'rien' && {'background-color': 'red'}"><a uib-tooltip="{{student.extra_case}}">{{student.nom}} {{student.prenom}} </a></li>
-      </ul>
+      <form class='cadre col-lg-6 cadrespecial'>
+        <label> Select existing file</label>
+        <input type="text" ng-model="$ctrl.nameFile">
+        <button type="submit" class="btn btn-primary" ng-click="$ctrl.ChargerFichier()">Go</button>
+      
+      </form>
 
-      <ul class="nav nav-tabs nav-stacked col-md-3 col-lg-1 col-sm-6" ng-if="$ctrl.onglet =='option'" ng-repeat="choice in $ctrl.awesomeChoice">
-        <li> <a>{{choice.nom}} coucou </a>
-          <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-12 col-sm-6" ng-repeat="option in choice.options">
-            <li> <a uib-tooltip="place min :{{option.place_min}}   place max : {{option.place_maxi}} ">{{option.nom}}  </a></li>
-        </li>
-
-        </ul>
     </div>
-    <div class="col-lg-3"> ici les futurs infos </div>
-  </div>
-</div> -->
+    <div class="row">
+      <table ng-if="$ctrl.onglet=='valide'">
 
-<table ng-if="$ctrl.onglet=='valide'">
+        <thead>
+          <tr>
+            <th class="centre" colspan="2"> student information </th>
+            <th class="centre" ng-repeat="choice in $ctrl.awesomeChoice |orderBy:'id'" colspan="{{choice.options.length}}"> {{choice.nom}} </th>
+          </tr>
 
-  <thead>
-    <tr>
-      <th class= "centre" colspan="2"> informartions étudiants </th>
-      <th class = "centre" ng-repeat="choice in $ctrl.awesomeChoice |orderBy:'id'" colspan="{{choice.options.length}}"> {{choice.nom}} </th>
-    </tr>
+          <tr>
+            <th>Last name</th>
+            <th>First name</th>
 
-    <tr>
-      <th>Last name</th>
-      <th>First name</th>
+            <th class="parasite" ng-repeat-start="choice in $ctrl.awesomeChoice |orderBy:'id'"> </th>
+            <th ng-repeat-end ng-repeat="option in choice.options |orderBy:'id'"> <span uib-tooltip="min seat : {{option.place_min}} \n </br> max seat : {{option.place_maxi}}"> {{option.nom}} </span>              </th>
 
-        <th class="parasite" ng-repeat-start="choice in $ctrl.awesomeChoice |orderBy:'id'"> </th>
-        <th ng-repeat-end ng-repeat="option in choice.options |orderBy:'id'"> <span uib-tooltip="place mini : {{option.place_min}} place maxi : {{option.place_maxi}}"> {{option.nom}} </span> </th>
-     
-    </tr>
-  </thead>
+          </tr>
+        </thead>
 
-  <tr ng-repeat="student in $ctrl.awesomeStudent"  >
-    <td ng-style="student.extra_case != 'rien' && {'background-color': 'yellow'}" > <span uib-tooltip="{{student.extra_case}}" > {{student.nom}}  </span></td>
-    <td ng-style="student.extra_case != 'rien' && {'background-color': 'yellow'}"> <span uib-tooltip="{{student.extra_case}}"> {{student.prenom}} </span> </td>
-   <!-- <th  ng-repeat="con in student.consultation |orderBy:['id_choix','id_option']"> 
+        <tr ng-repeat="student in $ctrl.awesomeStudent">
+          <td ng-style="student.extra_case != 'rien' && {'background-color': 'yellow'}"> <span uib-tooltip="{{student.extra_case}}"> {{student.nom}}  </span></td>
+          <td ng-style="student.extra_case != 'rien' && {'background-color': 'yellow'}"> <span uib-tooltip="{{student.extra_case}}"> {{student.prenom}} </span> </td>
+          <!-- <th  ng-repeat="con in student.consultation |orderBy:['id_choix','id_option']"> 
       <span ng-if="con.arguments !== undefined"uib-tooltip="preference : {{con.preference}} argument : {{con.arguments}}" class = "argument"> {{con.bids}} {{con.id_option}} </span>
       <span ng-if="con.arguments == undefined"uib-tooltip="preference : {{con.preference}} "> {{con.bids}} {{con.id_option}} </span>
       </th> -->
-      
-  <th class ="parasite"  ng-repeat-start="con in student.consultation |orderBy:['id_choix','id_option']"> </th>
- <th ng-if="con.arguments !== undefined" class ="argument" > 
-    <span uib-tooltip=' preference : {{con.preference}}  argument : {{con.arguments}} ' class = "argument">  {{con.bids}}  </span>
-     </th>
-<th ng-if="con.arguments == undefined" ng-repeat-end> 
-  <span uib-tooltip="preference : {{con.preference}} "> {{con.bids}}   </span>
-</th>
-<!--
+
+          <th class="parasite" ng-repeat-start="con in student.consultation |orderBy:['id_choix','id_option']"> </th>
+          <th ng-if="con.arguments !== undefined" class="argument">
+            <span uib-tooltip=' preference : {{con.preference}}  argument : {{con.arguments}} ' class="argument">  {{con.bids}}  </span>
+          </th>
+          <th ng-if="con.arguments == undefined" ng-repeat-end>
+            <span uib-tooltip="preference : {{con.preference}} "> {{con.bids}}   </span>
+          </th>
+          <!--
         <th ng-if="con.arguments !== undefined" class ="argument"  ng-repeat="con in student.consultation |orderBy:['id_choix','id_option']" > 
       <span uib-tooltip="preference : {{con.preference}} argument : {{con.arguments}}" class = "argument"> {{con.bids}} {{con.id_option}} </span>
       </th>
     <th ng-if="con.arguments == undefined" ng-repeat="con in student.consultation |orderBy:['id_choix','id_option']" > 
        <span uib-tooltip="preference : {{con.preference}} "> {{con.bids}} {{con.id_option}} </span>
       </th> -->
-    
-   
-  </tr>
+
+
+        </tr>
 
 
 
-</table>
+      </table>
+    </div>
+    <div class="row">
 
 
-<div class = "cadre"> 
- 
- <p> caption </p>
- <ul>
-   <li>  <span class="argument"> argument </span> </li>
-   <li> <span style="background-color: yellow"> Special needs </span> </li>
- </ul>
+      <div class="cadre">
 
-  </div>
+        <p> Legende </p>
+        <ul>
+          <li> <span class="argument"> Argument </span> </li>
+          <li> <span style="background-color: yellow"> Special needs </span> </li>
+        </ul>
+
+      </div>
+
+    </div>

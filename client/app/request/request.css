@@ -151,6 +151,14 @@ ul[dnd-list] li.selected {
 
 .dropzone .container-element {
     margin: 10px;
+   
+}
+.choix{
+     width: 47%;
+}
+
+h4{
+    text-align: center
 }
 
 .dropzone .container-element .column {

@@ -262,8 +262,8 @@ export class RequestController {
         console.log(response.data);
         this.consultation_id = response.data.consultation;
         console.log(this.consultation_id);
-        console.log("le choix");
-        console.log(this.awesomeChoice);
+      
+        
 
         for (var i = 0; i < this.awesomeChoice.length; ++i) { // pour tout les choix
           var provisoire = this.awesomeChoice[i].nom; // on met le nom du choix dans une variable
@@ -304,6 +304,7 @@ export class RequestController {
 
 
         this.creationOption();
+        console.log("le choix")
         console.log(this.choice);
         this.creationStudent();
 
@@ -372,7 +373,7 @@ export class RequestController {
       var etudiant = this.awesomeStudent[j];
       var liste_type = [];
       for (var prop in this.choice) {
-        liste_type.push(this.choice[prop]["nom"]);
+        liste_type.push(prop);
       }
       this.student[etudiant.id] = { nom: etudiant.nom, prenom: etudiant.prenom, type: liste_type, id: etudiant.id };
 
@@ -386,6 +387,8 @@ export class RequestController {
   deleterequest() {
     this.request = [];
     this.$scope.request = this.request
+    this.element_select.content = {}
+    this.element_select.place = {}
     this.choiceAllStudent()
   }
 
@@ -503,6 +506,7 @@ export class RequestController {
 
     if (signe == "<") {
       for (var prop in tab) {
+        prop = Number(prop)
         if (prop < value) {
           tableau_final = tableau_final.concat(tab[prop])
         }
@@ -512,6 +516,7 @@ export class RequestController {
 
     if (signe == "<=") {
       for (var prop in tab) {
+        prop = Number(prop)
         if (prop <= value) {
           tableau_final = tableau_final.concat(tab[prop])
         }
@@ -520,13 +525,18 @@ export class RequestController {
 
     if (signe == ">") {
       for (var prop in tab) {
+         prop = Number(prop)
         if (prop > value) {
+         
+          
+          console.log(prop + "est plus grand que "+ value)
           tableau_final = tableau_final.concat(tab[prop])
         }
       }
     }
     if (signe == ">=") {
       for (var prop in tab) {
+        prop = Number(prop)
         if (prop >= value) {
           tableau_final = tableau_final.concat(tab[prop])
         }
@@ -714,7 +724,7 @@ export class RequestController {
     console.log(this.consultation_id);
 
 
-    var index_to_delete = item.type.indexOf(choice.nom)
+    var index_to_delete = item.type.indexOf(choice)
     if (index_to_delete >= 0) {
       var element_delete = item.type.splice(index_to_delete, 1);
       this.student[item.id]["type"] = item.type;
@@ -731,8 +741,9 @@ export class RequestController {
     tableau.splice(position, 1)
   }
 
-  selection(destination, affect, max_place, attribue) {
-    console.log("nombre de place maximun" + max_place)
+  selection(destination, affect, max_place, attribue,idchoix) {
+    console.log("probleme")
+   
     var selectionnee = []
     var selectionsecond = []
     var erreur = ""
@@ -755,7 +766,7 @@ export class RequestController {
       var item = selectionnee[person];
       console.log(item)
 
-      var index_to_delete = item.type.indexOf(destination.nom);
+      var index_to_delete = item.type.indexOf(idchoix);
       console.log(index_to_delete);
       if (index_to_delete >= 0) {
         selectionsecond.push(item)
@@ -772,7 +783,7 @@ export class RequestController {
         var tmp = JSON.stringify(item);
         tmp = JSON.parse(tmp);
 
-        var stp = this.fctlog(tmp, destination);
+        var stp = this.fctlog(tmp, idchoix);
         console.log(stp);
         affect.push(stp);
       }
@@ -849,6 +860,40 @@ export class RequestController {
 
   countSimple(item) { // fonction qui permet de compter le nombre d'element 
     return item.length;
+  }
+
+  calculClearing(idoption,idchoix,nb_placerestante,raison){
+
+    var tri = []
+    for (var prop in this.choice[idchoix]["option"][idoption]["affect"][raison]){
+      tri.push(prop)
+    }
+    tri.sort(function(a, b) {
+  return b - a;
+});
+
+for(var i = 0; i<tri.length; i++){
+  
+  var compteur = 0;
+  for(var j = 0; j<this.choice[idchoix]["option"][idoption]["affect"][raison][tri[i]].length;j++){
+    var idstudent = this.choice[idchoix]["option"][idoption]["affect"][raison][tri[i]][j]
+    if(this.student[idstudent]["type"].indexOf(idchoix) !=-1){
+      compteur++;
+    }
+  }
+  if( compteur <= nb_placerestante){
+    
+    nb_placerestante = nb_placerestante - compteur
+  } 
+  else{
+   if(i == 0){
+     return "∅"
+   }
+    return tri[i-1]
+  }
+}
+return tri[tri.length-1]
+
   }
 
   saveCsv = function () {

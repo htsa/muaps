@@ -1,61 +1,51 @@
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <h1 class="page-header"> Request System</h1>
-    </div>
-  </div>
-
-
-
-
-  <form class="cadre col-md-6">
+<div class="row">
+  <form class="cadre col-lg-6">
     <label> File name previously entered </label>
     <input type="text" ng-model="$ctrl.nameFile">
     <button type="submit" class="btn btn-primary" ng-click="$ctrl.Charger()">Medor</button>
   </form>
 
-  <form class=' col-md-5'>
+  <form class=' col-lg-6'>
     <!-- zone permettant d'indiquer le nom d'un fichier ou l'on veut sauvegarder l'état actuelle pour pouvoir le recharger plus tard -->
     <label> File name  </label>
     <input type="text" ng-model="$ctrl.nameFileOut">
     <button type="button" ng-click="$ctrl.saveCsv()"><a class="btn"  ng-href="{{ urla }}">Export to CSV</a> </button>
 
-
-
   </form>
+</div>
+<div class="row">
 
-  <div class="col-md-12">
-   <br/>
-  </div>
 
   <div class="cadre request_zone col-md-12">
-    request zone   {{total.request}}
+    request zone {{total.request}}
     <br/>
-    <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.deleterequest()"> <span class="emoji" uib-tooltip="delete">❌</span> </button>
-    <span ng-repeat="(position,request) in $ctrl.request"   ng-click="$ctrl.switchRequest(request,position)" ng-style="$ctrl.element_select.place == position && {'background-color': 'yellow'}"> {{request.label}} </span>
- <br/>
- <form>
-   <button type="submit" class="btn btn-primary" ng-click="$ctrl.operator('&&')">and</button>
-   <button type="submit" class="btn btn-primary" ng-click="$ctrl.operator('||')">or</button>
-   <button type="submit" class="btn btn-primary" ng-click="$ctrl.operator('&|')">and not </button>
-   <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('<')" > < </button>
-   <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('<=')" > <= </button>
-   <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('=')" > = </button>
-   <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('>')" > > </button>
-   <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('>=')" > >= </button>
- </form>
+    
+    <span ng-repeat="(position,request) in $ctrl.request" ng-click="$ctrl.switchRequest(request,position)" ng-style="$ctrl.element_select.place == position && {'background-color': 'yellow'}"> {{request.label}} </span>
+    <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.deleterequest()"> <span class="emoji" uib-tooltip="delete">✖️</span> </button>
+    <br/>
+    <form>
+      <button type="submit" class="btn btn-primary" ng-click="$ctrl.operator('&&')">and</button>
+      <button type="submit" class="btn btn-primary" ng-click="$ctrl.operator('||')">or</button>
+      <button type="submit" class="btn btn-primary" ng-click="$ctrl.operator('&|')">and not </button>
+      <button type="submit" class="btn btn-primary" ng-click="$ctrl.operator('¬')">not </button>
+      <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('<')"> < </button>
+      <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('<=')"> <= </button>
+      <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('=')"> = </button>
+      <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('>')"> > </button>
+      <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('>=')"> >= </button>
+    </form>
 
- <!-- <span ng-repeat=" (value, candidat)in $ctrl.choice[$ctrl.element_select.content.idparent]['option'][$ctrl.element_select.content.idoption]['affect'][$ctrl.element_select.content.critere]"> {{value}} </span> -->
- <span ng-if=" $ctrl.scale_of_value.bool== true"> <span ng-repeat="(value,people) in $ctrl.scale_of_value.content" ng-click="$ctrl.changeValue(value)"> {{value}} </span></span>
+    <!-- <span ng-repeat=" (value, candidat)in $ctrl.choice[$ctrl.element_select.content.idparent]['option'][$ctrl.element_select.content.idoption]['affect'][$ctrl.element_select.content.critere]"> {{value}} </span> -->
+    <span ng-if=" $ctrl.scale_of_value.bool== true"> <span ng-repeat="(value,people) in $ctrl.scale_of_value.content" ng-click="$ctrl.changeValue(value)"> {{value}} </span></span>
   </div>
+</div>
+<div class="row">
 
   <div id="choice" class="cadre col-md-4">
 
-   <button type="button" ng-click="$ctrl.deplier('open')"> open all </button> <button type="button" ng-click="$ctrl.deplier('close')"> close all </button> 
+    <button type="button" ng-click="$ctrl.deplier('open')"> open all </button> <button type="button" ng-click="$ctrl.deplier('close')"> close all </button>
 
     <ul>
-      <li class="tree">
-        <label ng-click="$ctrl.choiceAllStudent()"> all students <label> </li>
       <li class="tree" ng-repeat="(nameChoix,choix) in $ctrl.choice">
         <input  class="open/close" type="checkbox" id="choix{{nameChoix}}" checked="checked" />
         <i class="fa fa-angle-double-right"></i>
@@ -69,16 +59,16 @@
             <label for="option{{nameOption}}">{{option.nom}}</label>
 
             <ul>
-              <li class="tree" ng-repeat=" (nameValeur, valeur) in option.affect" ng-if="$ctrl.countSon(valeur) > 0 " >
+              <li class="tree" ng-repeat=" (nameValeur, valeur) in option.affect" ng-if="$ctrl.countSon(valeur) > 0 ">
                 <input class="open/close" type="checkbox" id="{{nameOption}}{{nameValeur}}" checked="checked" />
                 <i class="fa fa-angle-double-right"></i>
                 <i class="fa fa-angle-double-down"></i>
-                <label for="{{nameOption}}{{nameValeur}}" ng-click="$ctrl.choiceStudent(choix.nom, option, nameValeur, -1, nameChoix, nameOption) ">{{nameValeur}}</label> 
+                <label for="{{nameOption}}{{nameValeur}}" ng-click="$ctrl.choiceStudent(choix.nom, option, nameValeur, -1, nameChoix, nameOption) ">{{nameValeur}}</label>
 
                 <ul>
-                  <li ng-repeat="(nameValue, student)  in valeur" ng-click="$ctrl.choiceStudent(choix.nom, option, nameValeur, nameValue, nameChoix, nameOption) " ng-mouseover="$ctrl.coloration(student,true)"
-                    ng-mouseleave="$ctrl.coloration(student,false)" ng-if="$ctrl.count(student) > 0 ">
-                    ({{$ctrl.count(student)}}) {{nameValue}}  
+                  <li ng-repeat="(nameValue, student)  in valeur" ng-click="$ctrl.choiceStudent(choix.nom, option, nameValeur, nameValue, nameChoix, nameOption) "
+                    ng-mouseover="$ctrl.coloration(student,true)" ng-mouseleave="$ctrl.coloration(student,false)" ng-if="$ctrl.count(student) > 0 ">
+                    ({{$ctrl.count(student)}}) {{nameValue}}
                   </li>
                 </ul>
               </li>
@@ -87,46 +77,48 @@
         </ul>
     </ul>
   </div>
-  
+
 
   <div id="student" class="col-md-2 cadre">
-   <button type="button" ng-click="$ctrl.selectAllStudent('select')"> select all </button> <button type="button" ng-click="$ctrl.selectAllStudent('close')"> deselect all </button> 
+    <button type="button" ng-click="$ctrl.selectAllStudent('select')"> select all </button> <button type="button" ng-click="$ctrl.selectAllStudent('close')"> deselect all </button>
 
     <ul dnd-list="list">
       <li ng-repeat="list in $ctrl.awesomeStudent" dnd-draggable="list" dnd-moved="list.splice($index, 1)" dnd-effect-allowed="move"
         ng-style="list.color == true && {'background-color': 'yellow'}">
-        <input  type="checkbox" ng-model="list.select" aria-label="Toggle ngShow">  {{list.prenom}} {{list.nom}} </li>
+        <input type="checkbox" ng-model="list.select" aria-label="Toggle ngShow"> {{list.prenom}} {{list.nom}} </li>
     </ul>
   </div>
-<!--  dnd-type="list.type"  -->
+  <!--  dnd-type="list.type"  -->
   <div id="panier" class="col-md-6 cadre">
 
-    
-    <span>Assignment : all  <input type="checkbox" ng-model="all_panier"  </span>
+
+    <span>Assignment : all  <input type="checkbox" ng-model="all_panier" > </span>
     <span ng-repeat="(ChoiceName, choice) in $ctrl.choice">
     {{choice.nom}} <input type="checkbox" ng-model="choice.visible" aria-label="Toggle ngShow"></span>
 
-    <div ng-repeat="(ChoiceName, choice) in $ctrl.choice" ng-show="choice.visible || all_panier ">
+    <div ng-repeat="(idchoix, choice) in $ctrl.choice" ng-show="choice.visible || all_panier ">
       <div class=" cadre dropzone box box-yellow">
 
-        <h3 class="panel_title"> {{choice.nom}}  </h3>
+        <h3 class="panel_title"> {{choice.nom}} </h3>
 
         <div class="row particulier">
-          <div ng-repeat=" option in choice.option" class="cadre container-element box box-blue col-md-5 ">
+          <div ng-repeat="(idoption,option) in choice.option" class="cadre container-element box box-blue col-lg-5 choix " ng-style="option.max - $ctrl.countStudentAffect(option.affect_real) == 0 && {'opacity': '0.3'}">
 
-            <h4> {{option.nom}} </br>
-            {{option.max}} <span class ="emoji" uib-tooltip="total place"> 💺 </span> {{option.max - $ctrl.countStudentAffect(option.affect_real)}} <span class ="emoji" uib-tooltip="free place"> 🔵 </span> {{$ctrl.countStudentAffect(option.affect_real)}} <span class ="emoji" uib-tooltip="place occuped">🔴</span> 
-            </br>
-         <span class ="emoji" uib-tooltip="clearing-bids"> 💰</span> <span class ="emoji" uib-tooltip="clearing-pref"> 💗</span>
+            <h4> {{option.nom}}</br>
+              {{option.max}} <span class="emoji" uib-tooltip="#seat"> 💺 </span> {{option.max - $ctrl.countStudentAffect(option.affect_real)}}
+              <span class="emoji" uib-tooltip="free seat"> 🔵 </span> {{$ctrl.countStudentAffect(option.affect_real)}}
+              <span class="emoji" uib-tooltip="occuped seat">🔴</span>
+                </br>
+                <span class="emoji" uib-tooltip="clearing-bids"> {{$ctrl.calculClearing(idoption,idchoix,option.max - $ctrl.countStudentAffect(option.affect_real),'bids')}} 💰</span> <span class="emoji" uib-tooltip="clearing-pref"> {{$ctrl.calculClearing(idoption,idchoix,option.max - $ctrl.countStudentAffect(option.affect_real),'pref')}}💗</span>
             </h4>
 
             <div class="cadrebis container-element box box-blue" ng-repeat="(type, affect) in option.affect_real">
-              <h5> {{type}} ({{$ctrl.countSimple(affect)}})  <button type="button" ng-click="$ctrl.selection(choice, affect,option.max,$ctrl.countStudentAffect(option.affect_real))"> send here </button>                </h5>
-              <ul dnd-list="affect"  dnd-drop="$ctrl.fctlog(item, choice)" dnd-disable-if="$ctrl.countStudentAffect(option.affect_real)>= option.max">
+              <h5> {{type}} ({{$ctrl.countSimple(affect)}}) <button type="button" ng-click="$ctrl.selection(choice, affect,option.max,$ctrl.countStudentAffect(option.affect_real),idchoix)"> send here </button>                </h5>
+              <ul dnd-list="affect" dnd-drop="$ctrl.fctlog(item, idchoix)" dnd-disable-if="$ctrl.countStudentAffect(option.affect_real)>= option.max">
                 <!-- dnd-allowed-types="choice.allowedTypes" -->
                 <li ng-repeat="item in affect" dnd-draggable="item" dnd-moved="affect.splice($index,1)" dnd-effect-allowed="move">
-                  
-                  <div class="item"> <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.removeAffect(item,$index,affect)"> <span class="emoji " uib-tooltip="delete">❌</span></button>{{item.prenom}} {{item.nom}}   <br/> <input class="information" type="text" ng-model="item.information"> </div>
+
+                  <div class="item"> {{item.prenom}} {{item.nom}} <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.removeAffect(item,$index,affect)"> <span class="emoji " uib-tooltip="delete">✖️</span></button> <br/> <input class="information" type="text" ng-model="item.information"> </div>
                 </li>
             </div>
           </div>
