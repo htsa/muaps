@@ -40,7 +40,7 @@ export class RequestController {
     };
     this.parse = []
     this.nbparentheseouverte = 0;
-
+    this.nonElement = true
 
     $scope.total = this;
 
@@ -51,10 +51,9 @@ export class RequestController {
     });
 
     $scope.$watch("request", function () {
-      console.log("on vous observe")
       if ($scope.total.request.length > 0) {
         $scope.total.ParsageRequest();
-      //  $scope.total.doRequestNew()
+        $scope.total.doRequestNew(0)
       }
     }, true);
 
@@ -390,6 +389,7 @@ export class RequestController {
 
   deleterequest() {
     this.request = [];
+    this.nonElement = true
     this.$scope.request = this.request
     this.element_select.content = {}
     this.element_select.place = {}
@@ -429,6 +429,7 @@ export class RequestController {
       this.request.push(objet);
       this.request.push(operateur);
       this.request.push(value);
+      this.nonElement = false;
     }
 
     /*console.log(this.awesomeChoice);
@@ -447,14 +448,12 @@ export class RequestController {
 
   operator(operator) {
     var flag = this.request.length - 1;
-    console.log("pourquoi tu passes pas ici")
     var operateur = { label: operator, type: "operateur" }
 
 
 
     if (this.element_select["content"]["type"] == "operateur") {
       this.request[this.element_select["place"]] = operateur
-      console.log("on modifie la requete")
       if (operator == "||") {
         this.choiceAllStudent();
       }
@@ -462,13 +461,13 @@ export class RequestController {
     }
 
     if (flag > -1 || this.request[flag]["type"] == "valeur" || this.request[flag]["type"] == "parentheseFerme") {
-    
-    this.request.push(operateur)
-    if (operator == "||") {
-      this.choiceAllStudent();
-    }
 
-  }
+      this.request.push(operateur)
+      if (operator == "||") {
+        this.choiceAllStudent();
+      }
+
+    }
   }
 
   parenthese(par) {
@@ -566,10 +565,6 @@ export class RequestController {
   }
 
   doRequestAux(tab, connector, tab2) { // permet de faire les jonctions
-    console.log(tab)
-    console.log(connector)
-    console.log(tab2)
-    console.log("on est dans la fonction")
     var result = []
 
     if (connector == "&&") {
@@ -587,7 +582,7 @@ export class RequestController {
 
       tab2.forEach(function (element) {
         if (tab.indexOf(element) == -1) {
-          console.log("ici on passe bien dans le ou")
+
           result.push(element)
         }
 
@@ -595,7 +590,6 @@ export class RequestController {
 
     }
     if (connector == "&|") {
-      console.log("on passe bien dans et pas ")
       result = tab;
 
       tab2.forEach(function (element) {
@@ -962,13 +956,10 @@ export class RequestController {
 
   // flag indique si on a traite le premier cas 
   ParsageRequest() {
-    console.log("on passe dans la fonction")
     this.parse = [];
-    console.log(this.request.length)
+
 
     for (var i = 0; i < this.request.length; i++) {
-      console.log(this.request[i]["type"])
-      console.log(i)
 
       switch (this.request[i]["type"]) {
         case "valeur":
@@ -980,6 +971,8 @@ export class RequestController {
           var idoption = this.request[i]["id"];
           var raison = this.request[i]["critere"];
           var resultat = this.typeOperator(this.choice[idparent]["option"][idoption]["affect"][raison], this.request[i + 1]["label"], this.request[i + 2]["label"]);
+          resultat = JSON.stringify(resultat);
+          resultat = JSON.parse(resultat);
           this.parse.push(resultat)
           break;
         case "operateur":
@@ -996,28 +989,76 @@ export class RequestController {
 
   doRequestNew(position) {
 
-    while (this.parse.length != 0) {
-      if (this.parse.length > 2) {
-        
-        var tmp = this.doRequestAux(this.parse[0], this.parse[1], this.parse[2])
-        this.parse.splice(position, 3, tmp)
-      }
-      else {
-        var tab = {};
-        for (var j = 0; j < this.parse[0].length; j++) {
-          tab[this.parse[0][j]] = this.student[this.parse[0][j]];
-        }
+  while(this.parse.length > 2){
+    console.log(this.parse)
+   
+  var tab1 = this.parse[position];
+  console.log("on affiche tab1")
+  console.log(tab1)
+  if(tab1 == "("){
+    console.log("on passe dans la premiere parenthese")
+    this.parse.splice(position,1)
+    tab1 = this.doRequestNew(position)
+  }
+  var op = this.parse[position+1]
+  console.log("on affiche op")
+  console.log(op)
+    if(op == ")"){
+      console.log("on passe dans le )")
+      this.parse.splice(position+1,1);
+      return  this.parse[position]
+    }
+  var tab2 = this.parse[position+2]
+  console.log("on affiche tab2")
+  console.log(tab2)
+  if(tab2 == "("){
+    console.log("on passe dans le second (")
+    tab2 = this.doRequestNew(position+4)
+  }
+  if( tab1 != undefined && tab2 != undefined && op !=undefined){
+  var tmp = this.doRequestAux(tab1, op, tab2)
+  this.parse.splice(position,3,tmp)
+  }
+}
+  if(this.parse[0] == "("){
+    this.affichageStudent(this.parse[1])
+  }
+  else{
+  this.affichageStudent(this.parse[0])}
+  if (this.request[this.request.length - 1]["label"] == "||"  || this.nonElement == true) {
 
-        this.awesomeStudent = tab;
-        if (this.request[this.request.length - 1]["label"] == "||") {
           this.choiceAllStudent();
         }
-        console.log(this.parse.length)
-        return
-      }
 
-    }
+
   }
+
+
+
+
+  
+
+  pick(position){
+    var tmp = this.parse[position]
+    this.parse.splice(position,1);
+    return tmp
+  }
+
+
+
+
+
+
+
+
+affichageStudent(tableau){
+  var tab = {};
+  for (var j = 0; j < tableau.length; j++) {
+    tab[tableau[j]] = this.student[tableau[j]];
+  }
+
+  this.awesomeStudent = tab;
+}
 }
 
 
