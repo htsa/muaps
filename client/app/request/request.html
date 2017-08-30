@@ -17,10 +17,11 @@
 
 
   <div class="cadre request_zone col-md-12">
+    <!--
     request zone {{total.request}}
     <br/>
     {{total.parse}}
-    <br/>
+    <br/> -->
     <span ng-repeat="(position,request) in $ctrl.request" ng-click="$ctrl.switchRequest(request,position)" ng-style="$ctrl.element_select.place == position && {'background-color': 'yellow'}"> {{request.label}} </span>
     <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.deleterequest()"> <span class="emoji" uib-tooltip="delete">✖️</span> </button>
     <br/>
@@ -36,8 +37,8 @@
       <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('=')"> = </button>
       <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('>')"> > </button>
       <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('>=')"> >= </button>
-      <button type="submit" class="btn btn-primary" ng-click="$ctrl.doRequestNew(0)"> go </button>
-      <button type ="submit"class="btn btn-primary" ng-click="" ng-repeat="(idchoix, choice) in $ctrl.choice"> no affect({{choice.nom}}) </button>
+     <!-- <button type="submit" class="btn btn-primary" ng-click="$ctrl.doRequestNew(0)"> go </button> -->
+      <button type ="submit"class="btn btn-primary" ng-click="$ctrl.noAffect(idchoix, choice.nom)" ng-repeat="(idchoix, choice) in $ctrl.choice"> no affect({{choice.nom}}) </button>
 
     </form>
 
