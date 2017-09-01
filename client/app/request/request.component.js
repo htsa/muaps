@@ -89,7 +89,7 @@ export class RequestController {
 
   deplier(etat) {
 
-    var elems = document.getElementsByClassName("open/close");
+    var elems = document.getElementsByClassName("openclose");
 
     if (etat == "close") {
       for (var i = 0; i < elems.length; i++) {
@@ -284,12 +284,14 @@ export class RequestController {
           var id = this.awesomeChoice[i].id; // on met l id du choix 
           //console.log(provisoire);
           var container = {
+             default: {
+              people: []
+            },
             bids: {
+              
               people: []
             },
-            default: {
-              people: []
-            },
+           
             argument: {
               people: []
             },
@@ -341,7 +343,7 @@ export class RequestController {
       for (var j = 0; j < tmp.options.length; j++) {
         var tmp_choix = tmp.options[j];
         var divers = { bids: {}, arguments: {}, pref: {} };
-        var affectation = { bids: [],  default: [],arguments: [], preference: [], dictator: [] }
+        var affectation = { default: [], bids: [],  arguments: [], preference: [], dictator: [] }
         option[tmp_choix.id] = ({ nom: tmp_choix.nom, max: tmp_choix.place_maxi, min: tmp_choix.place_min, affect: divers, affect_real: affectation });
 
       }
@@ -758,7 +760,7 @@ export class RequestController {
           tab.push(prop)
         }
       }
-      var obj = { label: "not affect to " + namechoix, type: "choix", idchoix : idchoix, special: true, resultat: tab }
+      var obj = { label: "not assigned to " + namechoix, type: "choix", idchoix : idchoix, special: true, resultat: tab }
       this.request.push(obj)
       this.nonElement = false;
     }
@@ -847,7 +849,7 @@ export class RequestController {
       }
       else {
         console.log(item)
-        erreur = erreur + item.prenom + " " + item.nom + " est deja affecté a ce choix \n"
+        erreur = erreur + item.prenom + " " + item.nom + " is already assigned to this choice \n"
       }
     }
     if (selectionsecond.length + attribue <= max_place && erreur =="") {
@@ -865,10 +867,11 @@ export class RequestController {
         affect.push(stp);
       }
     }
-    else {
+    else if(selectionsecond.length + attribue >= max_place){
       var place_restante = max_place - attribue
-      erreur = erreur + " on veut affecter " + selectionnee.length + " etudiant cependant il ne reste que " + place_restante + " places"
+      erreur = erreur  + selectionnee.length + " student(s) to be assigned and only " + place_restante + " free seat(s)"
     }
+
 
 
 

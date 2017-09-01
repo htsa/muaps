@@ -33,6 +33,8 @@
 ul[dnd-list] {
     min-height: 42px;
     padding-left: 0px;
+    background-color: white
+
 }
 
 /**
@@ -155,6 +157,8 @@ ul[dnd-list] li.selected {
 }
 .choix{
      width: 47%;
+     background-color: grey
+
 }
 
 h4{
@@ -257,22 +261,22 @@ h4{
 
 
 /* fonctionnel */
-.tree input {
+.tree .openclose {
   display: none;
 }
-.tree input ~ ul {
+.tree .openclose ~ ul {
  display: none;
 }
-.tree input:checked ~ ul {
+.tree .openclose:checked ~ ul {
  display: block;
 }
-.tree input ~ .fa-angle-double-down {
+.tree .openclose ~ .fa-angle-double-down {
   display: none;
 }
-.tree input:checked ~ .fa-angle-double-right {
+.tree .openclose:checked ~ .fa-angle-double-right {
   display: none;
 }
-.tree input:checked ~ .fa-angle-double-down {
+.tree .openclose:checked ~ .fa-angle-double-down {
   display: inline;
 }
 
@@ -310,4 +314,14 @@ color : red;
 
 .btnemoji{
   padding:  0px 3px 0px 3px
+}
+.case_argument{
+    visibility: visible;
+    display: inline;
+}
+
+h3{
+    text-align: center;
+    color:white;
+    background-color: #337ab7
 }
