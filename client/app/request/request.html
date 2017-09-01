@@ -17,11 +17,11 @@
 
 
   <div class="cadre request_zone col-md-12">
-    
-    <!-- request zone {{total.request}}
+
+     request zone {{total.request}}
     <br/>
     {{total.parse}}
-    <br/>  -->
+    <br/>  
     <span ng-repeat="(position,request) in $ctrl.request" ng-click="$ctrl.switchRequest(request,position)" ng-style="$ctrl.element_select.place == position && {'background-color': 'yellow'}"> {{request.label}} </span>
     <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.deleterequest()"> <span class="emoji" uib-tooltip="delete">✖️</span> </button>
     <br/>
@@ -37,8 +37,8 @@
       <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('=')"> = </button>
       <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('>')"> > </button>
       <button type="submit" class="btn btn-primary" ng-click="$ctrl.changementOperator('>=')"> >= </button>
-     <!-- <button type="submit" class="btn btn-primary" ng-click="$ctrl.doRequestNew(0)"> go </button> -->
-      <button type ="submit"class="btn btn-primary" ng-click="$ctrl.noAffect(idchoix, choice.nom)" ng-repeat="(idchoix, choice) in $ctrl.choice"> no affect({{choice.nom}}) </button>
+      <!-- <button type="submit" class="btn btn-primary" ng-click="$ctrl.doRequestNew(0)"> go </button> -->
+      <button type="submit" class="btn btn-primary" ng-click="$ctrl.noAffect(idchoix, choice.nom)" ng-repeat="(idchoix, choice) in $ctrl.choice"> no affect({{choice.nom}}) </button>
 
     </form>
 
@@ -54,10 +54,10 @@
 
     <ul>
       <li class="tree" ng-repeat="(nameChoix,choix) in $ctrl.choice">
-        <input  class="open/close" type="checkbox" id="choix{{nameChoix}}" checked="checked" />
+        <input class="open/close" type="checkbox" id="choix{{nameChoix}}" checked="checked" />
         <i class="fa fa-angle-double-right"></i>
         <i class="fa fa-angle-double-down"></i>
-        <label  for="choix{{nameChoix}}"> {{choix.nom}}</label>
+        <label for="choix{{nameChoix}}"> {{choix.nom}}</label>
         <ul>
           <li class="tree" ng-repeat="(nameOption, option) in choix.option">
             <input class="open/close" type="checkbox" id="option{{nameOption}}" checked="checked" />
@@ -106,7 +106,7 @@
     <div ng-repeat="(idchoix, choice) in $ctrl.choice" ng-show="choice.visible || all_panier ">
       <div class=" cadre dropzone box box-yellow">
 
-        <h3 class="panel_title"> {{choice.nom}} </h3>
+        <h3 class="panel_title"> {{choice.nom}} <!-- <button type="button" ng-click="$ctrl.assistantBid(idchoix)"> help me for bid </button> </h3> -->
 
         <div class="row particulier">
           <div ng-repeat="(idoption,option) in choice.option" class="cadre container-element box box-blue col-lg-5 choix " ng-style="option.max - $ctrl.countStudentAffect(option.affect_real) == 0 && {'opacity': '0.5'}">
@@ -115,17 +115,19 @@
               {{option.max}} <span class="emoji" uib-tooltip="#seat"> 💺 </span> {{option.max - $ctrl.countStudentAffect(option.affect_real)}}
               <span class="emoji" uib-tooltip="free seat"> 🔵 </span> {{$ctrl.countStudentAffect(option.affect_real)}}
               <span class="emoji" uib-tooltip="occuped seat">🔴</span>
-                </br>
-                <span class="emoji" uib-tooltip="clearing-bids"> {{$ctrl.calculClearing(idoption,idchoix,option.max - $ctrl.countStudentAffect(option.affect_real),'bids')}} 💰</span> <span class="emoji" uib-tooltip="clearing-pref"> {{$ctrl.calculClearing(idoption,idchoix,option.max - $ctrl.countStudentAffect(option.affect_real),'pref')}}💗</span>
+              </br>
+              <span class="emoji" uib-tooltip="clearing-bids"> {{$ctrl.calculClearing(idoption,idchoix,option.max - $ctrl.countStudentAffect(option.affect_real),'bids')}} 💰</span>              <span class="emoji" uib-tooltip="clearing-pref"> {{$ctrl.calculClearing(idoption,idchoix,option.max - $ctrl.countStudentAffect(option.affect_real),'pref')}}💗</span>
             </h4>
 
             <div class="cadrebis container-element box box-blue" ng-repeat="(type, affect) in option.affect_real">
               <h5> {{type}} ({{$ctrl.countSimple(affect)}}) <button type="button" ng-click="$ctrl.selection(choice, affect,option.max,$ctrl.countStudentAffect(option.affect_real),idchoix)"> send here </button>                </h5>
               <ul dnd-list="affect" dnd-drop="$ctrl.fctlog(item, idchoix)" dnd-disable-if="$ctrl.countStudentAffect(option.affect_real)>= option.max">
                 <!-- dnd-allowed-types="choice.allowedTypes" -->
-                <li ng-repeat="item in affect" >
+                <li ng-repeat="item in affect">
 
-                  <div class="item" uib-tooltip="{{item.label}}"> {{item.prenom}} {{item.nom}}  <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.removeAffect(item,$index,affect)"> <span class="emoji " uib-tooltip="delete">✖️</span></button> <br/> <input class="information" type="text" ng-model="item.information"> </div>
+                  <div class="item" uib-tooltip="{{item.label}}"> {{item.prenom}} {{item.nom}} 
+                  <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.removeAffect(item,$index,affect)"> <span class="emoji " uib-tooltip="delete">✖️</span></button>   
+                  <button ng-if="item.label != ''" type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.playRequest(item.request)"> <span class="emoji " uib-tooltip="replay request">🔄</span></button>                    <br/> <input class="information" type="text" ng-model="item.information"> </div>
                 </li>
             </div>
           </div>

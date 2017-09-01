@@ -46,6 +46,7 @@ export class RequestController {
 
     $scope.request = this.request
     $scope.choice = this.choice
+    this.idAllStudent = [];
 
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('thing');
@@ -146,8 +147,8 @@ export class RequestController {
         this.choice = {};
         this.awesomeStudent = [];
         this.student = {};
-        console.log(this.awesomeStudent);
-        console.log("ici");
+        this.request = [];
+        this.idAllStudent = []
 
         if (res.data.version == 1) {
           this.ChargerVersion();
@@ -286,6 +287,9 @@ export class RequestController {
             bids: {
               people: []
             },
+            default: {
+              people: []
+            },
             argument: {
               people: []
             },
@@ -293,9 +297,6 @@ export class RequestController {
               people: []
             },
             dictator: {
-              people: []
-            },
-            default: {
               people: []
             }
           };
@@ -340,7 +341,7 @@ export class RequestController {
       for (var j = 0; j < tmp.options.length; j++) {
         var tmp_choix = tmp.options[j];
         var divers = { bids: {}, arguments: {}, pref: {} };
-        var affectation = { bids: [], arguments: [], preference: [], dictator: [], default: [] }
+        var affectation = { bids: [],  default: [],arguments: [], preference: [], dictator: [] }
         option[tmp_choix.id] = ({ nom: tmp_choix.nom, max: tmp_choix.place_maxi, min: tmp_choix.place_min, affect: divers, affect_real: affectation });
 
       }
@@ -392,7 +393,7 @@ export class RequestController {
         liste_type.push(prop);
       }
       this.student[etudiant.id] = { nom: etudiant.nom, prenom: etudiant.prenom, type: liste_type, id: etudiant.id };
-
+      this.idAllStudent.push(etudiant.id)
 
 
 
@@ -788,6 +789,8 @@ export class RequestController {
         label = label + " " + this.request[i]["label"]
       }
       item.label = label
+      item.request = JSON.stringify(this.request);
+      item.request = JSON.parse(item.request);
       return item;
     }
 
@@ -798,8 +801,18 @@ export class RequestController {
     console.log(item)
     console.log(position)
     console.log(tableau)
-    this.awesomeStudent[item.id]["type"].push(item.type[0])
+    this.student[item.id]["type"].push(item.type[0])
     tableau.splice(position, 1)
+  }
+
+  playRequest(request){
+    console.log("on affiche la requete")
+    console.log(request)
+    this.request = request;
+    this.nonElement = false
+    this.$scope.request = this.request
+    this.element_select.content = {}
+    this.element_select.place = {}
   }
 
   selection(destination, affect, max_place, attribue, idchoix) {
@@ -930,6 +943,7 @@ export class RequestController {
 
     var tri = []
     for (var prop in this.choice[idchoix]["option"][idoption]["affect"][raison]) {
+      var prop = Number(prop)
       tri.push(prop)
     }
 
@@ -1131,8 +1145,68 @@ export class RequestController {
 
 
   assistantBid(idchoix){
-    var liste_option = this.choice[idchoix];
-    
+    var liste_option = this.choice[idchoix]["option"];
+    var message = "nous conseillons"
+    var id_student = JSON.stringify(this.idAllStudent);
+        id_student = JSON.parse(id_student);
+    var ref = {}
+    for(var prop in liste_option){
+      var restant = liste_option[prop]["max"] - this.countStudentAffect(liste_option[prop]["affect_real"])
+      var tri = [];
+          for (var prop1 in liste_option[prop]["affect"]["bids"]) {
+            prop1 = Number(prop1)
+          tri.push(prop1)
+    }
+        tri.sort(function (a, b) {
+        return b - a;
+      });
+      var obj = {ordre_bid : tri , place : restant, position : 0,util : true}
+      ref[prop] = obj  
+    }
+  /*  console.log(ref)
+
+    var score = 0
+    var gagnant = ""
+    for(var prop in ref){
+      var place = ref[prop]["position"]
+      if(score < ref[prop]["ordre_bid"][place]){
+        score = ref[prop]["ordre_bid"][place]
+        gagnant = prop
+      }
+    }
+    console.log(score)
+    console.log(gagnant)
+
+    ref[gagnant]["ordre_bid"][]
+*/
+  for(var prop in ref){
+    var ensemble_valeur = ref[prop]["ordre_bid"]
+    console.log(ensemble_valeur)
+    for(var i = 0; i< ensemble_valeur.length;i++){
+    var ensemble_etudiant = liste_option[prop]["affect"]["bids"][ensemble_valeur[i]]
+    console.log("pour l option " + prop + " a la valeur " + ensemble_valeur[i])
+    console.log(ensemble_etudiant)
+
+    for(var j = 0; j<ensemble_etudiant.length; j++){
+      var tableau_temporaire = []
+      if(id_student.indexOf(ensemble_etudiant[j])> -1){
+        for(var prop2 in liste_option){
+          if(prop2 == prop){
+
+          }
+          else{
+            console.log("proposition 2 " + prop2 + "proposition 1"+ prop)
+          }
+        }
+      }
+    }
+    }
+   
+  }
+
+  
+  console.log(this.student)
+
   }
 
 
