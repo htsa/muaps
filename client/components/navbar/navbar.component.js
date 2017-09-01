@@ -4,10 +4,7 @@
 import angular from 'angular';
 
 export class NavbarComponent {
-  menu = [{
-    title: 'Home',
-    state: 'main'
-  },
+  menu = [
   {
     title:"File management",
     state: 'student'
