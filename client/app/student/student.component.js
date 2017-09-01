@@ -44,6 +44,7 @@ addFile(){
           url :'api/things/upload',
           data : {file : this.file}
         }).then(this.ChargerFichier());
+        this.ChargerFichier()
 }
 else {
   alert("ce n'est pas un fichier json");
@@ -53,16 +54,21 @@ else {
 
 
 ChargerFichier(){
+    console.log("on appele charger fichier")
  
   if (!/json$/.test(this.nameFile)){
     this.nameFile = this.nameFile + ".json";
   }
+  console.log(this.nameFile)
   this.$rootScope.file_name = this.nameFile;
+  console.log("on appelle le get")
    this.$http.get('./storage/'+this.nameFile)
       .then(response => {
+        console.log("on passe dans le reponse")
       this.awesomeStudent = response.data.etudiants;
       this.awesomeChoice = response.data.Choix;
       this.onglet="valide";
+      console.log(response.data.etudiants)
   });
 }
 

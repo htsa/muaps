@@ -45,24 +45,27 @@ export class RequestController {
     $scope.total = this;
 
     $scope.request = this.request
+    $scope.choice = this.choice
 
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('thing');
     });
 
-    $scope.$watch("request", function () {
-      if ($scope.total.request.length > 0 && $scope.total.nbparentheseouverte == 0  ) {
-        $scope.total.ParsageRequest();
-        console.log("test")
-        console.log($scope.total.parse[$scope.total.parse.length-1])
-        
-        $scope.total.doRequestNew(0)}
+    $scope.$watch("total.request", function () {
+      if ($scope.total.request.length > 0 ) {
+      $scope.total.ParsageRequest();
+      console.log("c'est requete qui modifie")
+      $scope.total.doRequestNew(0)
+      }
+    }, true);
 
-        else{
-          console.log("je n'ai pas appele la fonction")
-
+      $scope.$watch("total.choice", function () {
+         console.log("c est choice qui modifie")
+        if ($scope.total.request.length > 0  ) {
+      $scope.total.ParsageRequest();
+      console.log($scope.total.parse)     
+      $scope.total.doRequestNew(0)
         }
-      
     }, true);
 
   }
@@ -292,8 +295,8 @@ export class RequestController {
             dictator: {
               people: []
             },
-            default : {
-              people : []
+            default: {
+              people: []
             }
           };
 
@@ -337,7 +340,7 @@ export class RequestController {
       for (var j = 0; j < tmp.options.length; j++) {
         var tmp_choix = tmp.options[j];
         var divers = { bids: {}, arguments: {}, pref: {} };
-        var affectation = { bids: [], arguments: [], preference: [], dictator: [], default : [] }
+        var affectation = { bids: [], arguments: [], preference: [], dictator: [], default: [] }
         option[tmp_choix.id] = ({ nom: tmp_choix.nom, max: tmp_choix.place_maxi, min: tmp_choix.place_min, affect: divers, affect_real: affectation });
 
       }
@@ -405,6 +408,7 @@ export class RequestController {
     this.element_select.content = {}
     this.element_select.place = {}
     this.choiceAllStudent()
+
   }
 
   choiceStudent(choix, option, raison, valeur, idchoix, idoption) {
@@ -419,7 +423,7 @@ export class RequestController {
 
     if (taille == -1 || this.request[taille]["type"] == "parentheseOuvre" || this.request[taille]["type"] == "operateur" || this.element_select.content["type"] == "choix") {
 
-
+     this.selectAllStudent("close")
       var nom = choix + "." + option.nom + "." + raison;
       var objet = { label: nom, id: idoption, type: "choix", idparent: idchoix, critere: raison };
 
@@ -470,9 +474,13 @@ export class RequestController {
       }
       return
     }
-
+    if(this.request[flag]["type"] == "operateur"){
+     return
+    }
     if (flag > -1 || this.request[flag]["type"] == "valeur" || this.request[flag]["type"] == "parentheseFerme") {
-
+      console.log("on passe ici")
+      console.log(flag)
+      console.log(this.request[flag])
       this.request.push(operateur)
       if (operator == "||") {
         this.choiceAllStudent();
@@ -662,7 +670,7 @@ export class RequestController {
       fin = this.typeOperator(tableau_pre_traitement, signe, value);
 
 
-      console.log("on est encore dans le for")
+     
       tableau_initial = this.doRequestAux(tableau_initial, this.request[i - 1]["label"], fin)
       console.log(tableau_initial)
     }
@@ -723,6 +731,7 @@ export class RequestController {
   choiceAllStudent() {
     this.awesomeStudent = this.student;
     this.awesomeStudent.toString();
+    this.selectAllStudent("close")
 
   }
 
@@ -734,24 +743,24 @@ export class RequestController {
   }
 
   noAffect(idchoix, namechoix) {
-   
+
 
     var taille = this.request.length - 1;
 
-    
+
 
     if (taille == -1 || this.request[taille]["type"] == "parentheseOuvre" || this.request[taille]["type"] == "operateur" || this.element_select.content["type"] == "choix") {
-    var tab = []
-    for (var prop in this.student) {
+      var tab = []
+      for (var prop in this.student) {
 
-      if (this.student[prop]["type"].indexOf(idchoix) > -1) {
-        tab.push(prop)
+        if (this.student[prop]["type"].indexOf(idchoix) > -1) {
+          tab.push(prop)
+        }
       }
+      var obj = { label: "not affect to " + namechoix, type: "choix", idchoix : idchoix, special: true, resultat: tab }
+      this.request.push(obj)
+      this.nonElement = false;
     }
-    var obj = { label: "not affect to " + namechoix, type: "choix", special: true, resultat: tab }
-    this.request.push(obj)
-    this.nonElement = false;
-  }
   }
 
 
@@ -774,6 +783,11 @@ export class RequestController {
       var element_delete = item.type.splice(index_to_delete, 1);
       this.student[item.id]["type"] = item.type;
       item.type = element_delete;
+      var label = ""
+      for (var i = 0 ; i<this.request.length;i++){
+        label = label + " " + this.request[i]["label"]
+      }
+      item.label = label
       return item;
     }
 
@@ -782,6 +796,8 @@ export class RequestController {
 
   removeAffect(item, position, tableau) {
     console.log(item)
+    console.log(position)
+    console.log(tableau)
     this.awesomeStudent[item.id]["type"].push(item.type[0])
     tableau.splice(position, 1)
   }
@@ -792,7 +808,7 @@ export class RequestController {
     var selectionnee = []
     var selectionsecond = []
     var erreur = ""
-
+    
 
     for (var person in this.awesomeStudent) {
       if (this.awesomeStudent[person]["select"]) {
@@ -821,9 +837,12 @@ export class RequestController {
         erreur = erreur + item.prenom + " " + item.nom + " est deja affecté a ce choix \n"
       }
     }
-    if (selectionsecond.length + attribue <= max_place) {
+    if (selectionsecond.length + attribue <= max_place && erreur =="") {
+      console.log("on affiche erreur" + erreur)
+      console.log(erreur.length)
       for (var person in selectionsecond) {
         item = selectionsecond[person]
+        item.select = false
 
         var tmp = JSON.stringify(item);
         tmp = JSON.parse(tmp);
@@ -914,16 +933,16 @@ export class RequestController {
       tri.push(prop)
     }
 
-    if(raison =="bids"){
-    tri.sort(function (a, b) {
-      return b - a;
-    });
-  }
-  else if(raison =="pref"){
-    tri.sort(function (a, b) {
-      return a - b;
-    });
-  }
+    if (raison == "bids") {
+      tri.sort(function (a, b) {
+        return b - a;
+      });
+    }
+    else if (raison == "pref") {
+      tri.sort(function (a, b) {
+        return a - b;
+      });
+    }
 
     for (var i = 0; i < tri.length; i++) {
 
@@ -1008,7 +1027,13 @@ export class RequestController {
           break;
         case "choix":
           if (this.request[i]["special"] == true) {
-            resultat = this.request[i]["resultat"]
+          var resultat = []
+      for (var prop in this.student) {
+
+        if (this.student[prop]["type"].indexOf(this.request[i]["idchoix"]) > -1) {
+          resultat.push(prop)
+        }
+      }
           }
           else {
             var idparent = this.request[i]["idparent"];
@@ -1033,53 +1058,69 @@ export class RequestController {
   }
 
   doRequestNew(position) {
+    
 
-    while (this.parse.length > 2) {
+    if (this.parse.length > 2) {
+      
       console.log(this.parse)
-
       var tab1 = this.parse[position];
-      console.log("on affiche tab1")
+       console.log("tab1")
       console.log(tab1)
       if (tab1 == "(") {
-        console.log("on passe dans la premiere parenthese")
         this.parse.splice(position, 1)
         tab1 = this.doRequestNew(position)
+        console.log("le nouveau tab est ")
+        console.log(tab1)
       }
+     
       var op = this.parse[position + 1]
-      console.log("on affiche op")
+         console.log("op")
       console.log(op)
       if (op == ")") {
-        console.log("on passe dans le )")
-        this.parse.splice(position + 1, 1);
+        this.parse.splice(position + 1, 1)
+        console.log("on va renvoyer la valeur")
+        console.log(this.parse[position])
+
         return this.parse[position]
       }
+   
       var tab2 = this.parse[position + 2]
-      console.log("on affiche tab2")
+       console.log("tab2")
       console.log(tab2)
       if (tab2 == "(") {
-        console.log("on passe dans le second (")
-        tab2 = this.doRequestNew(position + 4)
+        this.parse.splice(position + 2, 1)
+        tab2 = this.doRequestNew(position + 2)
       }
+
+      // si tout est définie
       if (tab1 != undefined && tab2 != undefined && op != undefined) {
         var tmp = this.doRequestAux(tab1, op, tab2)
         this.parse.splice(position, 3, tmp)
+        console.log("on rappele la fonction")
+  return this.doRequestNew(position)
+      }
+      if(tab1 == undefined || tab2 == undefined || op == undefined){
+        console.log("on passe ici parfois ? ")
+        return this.parse[position]
       }
       if(tab1 == undefined && tab2 == undefined && op == undefined){
-        return
+        console.log("on passe dans le cas bizarre")
+        
       }
     }
-    if (this.parse[0] == "(") {
-      this.affichageStudent(this.parse[1])
-    }
-    else {
+   else if(this.parse.length > 1){
+     return this.parse[0]
+   }
+
+    console.log("tout fini")
+      console.log(this.parse)
       this.affichageStudent(this.parse[0])
-    }
+    
     if (this.request[this.request.length - 1]["label"] == "||" || this.nonElement == true) {
 
       this.choiceAllStudent();
     }
-
-
+    
   }
 
 
@@ -1087,10 +1128,11 @@ export class RequestController {
 
 
 
-  pick(position) {
-    var tmp = this.parse[position]
-    this.parse.splice(position, 1);
-    return tmp
+
+
+  assistantBid(idchoix){
+    var liste_option = this.choice[idchoix];
+    
   }
 
 

@@ -17,11 +17,11 @@
 
 
   <div class="cadre request_zone col-md-12">
-    <!--
-    request zone {{total.request}}
+    
+    <!-- request zone {{total.request}}
     <br/>
     {{total.parse}}
-    <br/> -->
+    <br/>  -->
     <span ng-repeat="(position,request) in $ctrl.request" ng-click="$ctrl.switchRequest(request,position)" ng-style="$ctrl.element_select.place == position && {'background-color': 'yellow'}"> {{request.label}} </span>
     <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.deleterequest()"> <span class="emoji" uib-tooltip="delete">✖️</span> </button>
     <br/>
@@ -109,7 +109,7 @@
         <h3 class="panel_title"> {{choice.nom}} </h3>
 
         <div class="row particulier">
-          <div ng-repeat="(idoption,option) in choice.option" class="cadre container-element box box-blue col-lg-5 choix " ng-style="option.max - $ctrl.countStudentAffect(option.affect_real) == 0 && {'opacity': '0.3'}">
+          <div ng-repeat="(idoption,option) in choice.option" class="cadre container-element box box-blue col-lg-5 choix " ng-style="option.max - $ctrl.countStudentAffect(option.affect_real) == 0 && {'opacity': '0.5'}">
 
             <h4> {{option.nom}}</br>
               {{option.max}} <span class="emoji" uib-tooltip="#seat"> 💺 </span> {{option.max - $ctrl.countStudentAffect(option.affect_real)}}
@@ -123,9 +123,9 @@
               <h5> {{type}} ({{$ctrl.countSimple(affect)}}) <button type="button" ng-click="$ctrl.selection(choice, affect,option.max,$ctrl.countStudentAffect(option.affect_real),idchoix)"> send here </button>                </h5>
               <ul dnd-list="affect" dnd-drop="$ctrl.fctlog(item, idchoix)" dnd-disable-if="$ctrl.countStudentAffect(option.affect_real)>= option.max">
                 <!-- dnd-allowed-types="choice.allowedTypes" -->
-                <li ng-repeat="item in affect" dnd-draggable="item" dnd-moved="affect.splice($index,1)" dnd-effect-allowed="move">
+                <li ng-repeat="item in affect" >
 
-                  <div class="item"> {{item.prenom}} {{item.nom}} <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.removeAffect(item,$index,affect)"> <span class="emoji " uib-tooltip="delete">✖️</span></button> <br/> <input class="information" type="text" ng-model="item.information"> </div>
+                  <div class="item" uib-tooltip="{{item.label}}"> {{item.prenom}} {{item.nom}}  <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.removeAffect(item,$index,affect)"> <span class="emoji " uib-tooltip="delete">✖️</span></button> <br/> <input class="information" type="text" ng-model="item.information"> </div>
                 </li>
             </div>
           </div>
