@@ -1,17 +1,25 @@
 <div class="row">
-  <form class="col-lg-6">
+  <form class="col-lg-4">
     <label> File name previously entered </label>
     <input type="text" ng-model="$ctrl.nameFile">
     <button type="submit" class="btn btn-primary" ng-click="$ctrl.Charger()">go</button>
-    <button type="submit" class="btn btn-primary">🔙</button> 
-    <button type="submit" class="btn btn-primary">🔜</button> 
+   <!--  <button type="submit" class="btn btn-primary">🔙</button> 
+    <button type="submit" class="btn btn-primary">🔜</button> -->
   </form>
 
-  <form class=' col-lg-6'>
+  <form class=' col-lg-4'>
     <!-- zone permettant d'indiquer le nom d'un fichier ou l'on veut sauvegarder l'état actuelle pour pouvoir le recharger plus tard -->
     <label> File name  </label>
     <input type="text" ng-model="$ctrl.nameFileOut">
-    <button type="button" ng-click="$ctrl.saveCsv()"><a class="btn"  ng-href="{{ urla }}">Export to CSV</a> </button>
+    <button type="button" ng-click="$ctrl.saveCSV()"><a class="btn"  ng-href="{{ urla }}">Export to CSV</a> </button>
+
+  </form>
+
+    <form class=' col-lg-4'>
+    <!-- zone permettant d'indiquer le nom d'un fichier ou l'on veut sauvegarder l'état actuelle pour pouvoir le recharger plus tard -->
+    <label> File name  </label>
+    <input type="text" ng-model="$ctrl.nameFileOut">
+    <button type="button" ng-click="$ctrl.saveJSON()"><a class="btn"  ng-href="{{ urla }}">Save to JSON</a> </button>
 
   </form>
 </div>
@@ -20,8 +28,8 @@
 
   <div class="cadre request_zone col-md-12">
 
-    request zone {{total.request}}
-    <br/> {{total.parse}}
+    request zone  <!--{{total.request}}
+    <br/> {{total.parse}} -->
     <br/>
     <span ng-repeat="(position,request) in $ctrl.request" ng-click="$ctrl.switchRequest(request,position)" ng-style="$ctrl.element_select.place == position && {'background-color': 'yellow'}"> {{request.label}} </span>
     <button type="submit" class="btn btn-primary btnemoji" ng-click="$ctrl.deleterequest()"> <span class="emoji" uib-tooltip="delete">✖️</span> </button>
@@ -76,9 +84,13 @@
                 <ul>
                   <li ng-repeat="(nameValue, student)  in valeur" 
                     ng-mouseover="$ctrl.coloration(student,true)" ng-mouseleave="$ctrl.coloration(student,false)" ng-if="$ctrl.count(student) > 0 "  >
-                    <input ng-if="nameValeur =='arguments' "  class ="case_argument" type="checkbox" ng-model="$ctrl.nonelement" aria-label="Toggle ngShow">
-                    <span ng-click="$ctrl.choiceStudent(choix.nom, option, nameValeur, nameValue, nameChoix, nameOption) ">
-                    ({{$ctrl.count(student)}}) {{nameValue}}
+                    <input ng-if="nameValeur =='arguments' "  class ="case_argument" type="checkbox" ng-model="$ctrl.selectargument[nameOption][nameValue]['select'] " aria-label="Toggle ngShow">
+                    <span ng-if="nameValeur =='arguments' "  uib-tooltip ="{{$ctrl.tooltipStudent(nameOption,nameValue,nameValeur)}} "ng-click="$ctrl.choiceStudent(choix.nom, option, nameValeur, nameValue, nameChoix, nameOption) ">
+                    ({{$ctrl.count(student)}}) {{nameValue}}   
+                    </span>
+
+                    <span ng-if="nameValeur !='arguments' " ng-click="$ctrl.choiceStudent(choix.nom, option, nameValeur, nameValue, nameChoix, nameOption) ">
+                    ({{$ctrl.count(student)}}) {{nameValue}}    
                     </span>
                   </li>
                 </ul>
@@ -94,7 +106,7 @@
     <button type="button" ng-click="$ctrl.selectAllStudent('select')"> select all </button> <button type="button" ng-click="$ctrl.selectAllStudent('close')"> deselect all </button>
 
     <ul dnd-list="list">
-      <li ng-repeat="list in $ctrl.awesomeStudent" dnd-draggable="list" dnd-moved="list.splice($index, 1)" dnd-effect-allowed="move"
+      <li ng-repeat="list in $ctrl.awesomeStudent " dnd-draggable="list" dnd-moved="list.splice($index, 1)" dnd-effect-allowed="move"
         ng-style="list.color == true && {'background-color': 'yellow'}">
         <input type="checkbox" ng-model="list.select" aria-label="Toggle ngShow"> {{list.prenom}} {{list.nom}} </li>
     </ul>

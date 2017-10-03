@@ -16,6 +16,7 @@ export class RequestController {
     this.Upload = Upload;
     this.awesomeChoice = [];
     this.choice = {};
+    this.selectargument = {};
     this.student = {};
     this.models = {
     };
@@ -53,20 +54,20 @@ export class RequestController {
     });
 
     $scope.$watch("total.request", function () {
-      if ($scope.total.request.length > 0 ) {
-      $scope.total.ParsageRequest();
-      console.log("c'est requete qui modifie")
-      $scope.total.doRequestNew(0)
+      if ($scope.total.request.length > 0) {
+        $scope.total.ParsageRequest();
+        console.log("c'est requete qui modifie")
+        $scope.total.doRequestNew(0)
       }
     }, true);
 
-      $scope.$watch("total.choice", function () {
-         console.log("c est choice qui modifie")
-        if ($scope.total.request.length > 0  ) {
-      $scope.total.ParsageRequest();
-      console.log($scope.total.parse)     
-      $scope.total.doRequestNew(0)
-        }
+    $scope.$watch("total.choice", function () {
+      console.log("c est choice qui modifie")
+      if ($scope.total.request.length > 0) {
+        $scope.total.ParsageRequest();
+        console.log($scope.total.parse)
+        $scope.total.doRequestNew(0)
+      }
     }, true);
 
   }
@@ -195,22 +196,49 @@ export class RequestController {
       this.nameFile = this.nameFile + ".json";
     }
     this.$http.get('./storage/' + this.nameFile).then(response => {
-      this.awesomeStudent = response.data.student;
+      /*this.awesomeStudent = response.data.student;
       this.awesomeChoice = response.data.choice;
       this.models = response.data.liste_gauche;
-      this.models_second = response.data.liste_droite;
+      this.models_second = response.data.liste_droite;*/
+
+    this.awesomeChoice =response.data.awesomeChoice
+    this.choice =response.data.choice;
+    this.selectargument =response.data.selectargument;
+    this.student =response.data.student ;
+    this.models =response.data.models;
+    this.request =response.data.request ; // requete.
+    this.awesomeStudent =response.data.awesomeStudent;
+    this.models_second =response.data.models_second;
+    this.scale_of_value =response.data.scale_of_value;
+    this.nbparentheseouverte=response.data.nbparentheseouverte;
+    this.nonElement =response.data.nonElement
     })
   }
 
   saveJSON = function () {
+    console.log("on appele la fonction")
+    var transfert = {}
+    transfert["version"]= 1;
+    /* this.$scope.data.choice = this.awesomeChoice;
+     console.log("choix")
+     console.log(this.choice)
+     this.$scope.data.student = this.awesomeStudent;
+     this.$scope.data.liste_gauche = this.models;
+     this.$scope.data.liste_droite = this.models_second;
+     var bla = angular.toJson(this.$scope.data);*/
 
-
-    this.$scope.data.version = 1;
-    this.$scope.data.choice = this.awesomeChoice;
-    this.$scope.data.student = this.awesomeStudent;
-    this.$scope.data.liste_gauche = this.models;
-    this.$scope.data.liste_droite = this.models_second;
-    var bla = angular.toJson(this.$scope.data);
+    transfert["awesomeChoice"]=this.awesomeChoice ;
+    transfert["choice"]=this.choice ;
+    transfert["selectargument"]=this.selectargument ;
+    transfert["student"]=this.student ;
+    transfert["models"]=this.models ;
+    transfert["request"]=this.request ; // requete.
+    transfert["awesomeStudent"]=this.awesomeStudent ;
+    transfert["models_second"]=this.models_second ;
+    transfert["scale_of_value"]=this.scale_of_value ;
+    transfert["nbparentheseouverte"]=this.nbparentheseouverte;
+    transfert["nonElement"]=this.nonElement 
+    var bla = angular.toJson(transfert)
     if (this.nameFileOut == undefined) {
       alert("tu n'as pas renseigne le nom d'un fichier");
       return
@@ -284,14 +312,14 @@ export class RequestController {
           var id = this.awesomeChoice[i].id; // on met l id du choix 
           //console.log(provisoire);
           var container = {
-             default: {
+            default: {
               people: []
             },
             bids: {
-              
+
               people: []
             },
-           
+
             argument: {
               people: []
             },
@@ -343,7 +371,7 @@ export class RequestController {
       for (var j = 0; j < tmp.options.length; j++) {
         var tmp_choix = tmp.options[j];
         var divers = { bids: {}, arguments: {}, pref: {} };
-        var affectation = { default: [], bids: [],  arguments: [], preference: [], dictator: [] }
+        var affectation = { default: [], bids: [], arguments: [], preference: [], dictator: [] }
         option[tmp_choix.id] = ({ nom: tmp_choix.nom, max: tmp_choix.place_maxi, min: tmp_choix.place_min, affect: divers, affect_real: affectation });
 
       }
@@ -372,16 +400,26 @@ export class RequestController {
 
 
           for (var w = 0; w < pos.arguments.length; w++) {
+
             if (!this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"].hasOwnProperty(pos.arguments[w])) {
               this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"][pos.arguments[w]] = [];
+              console.log("on passe de dans")
+              if (!this.selectargument.hasOwnProperty(pos.id_option)) {
+                this.selectargument[pos.id_option] = {}
+                console.log("tu plantes la");
+              }
+              console.log("ou tu plantes ici ")
+              this.selectargument[pos.id_option][pos.arguments[w]] = { select: false, student: [] }
               console.log(pos.id_etudiant + " on cree une nouvelle entrée");
             }
             this.choice[pos.id_choix]["option"][pos.id_option]["affect"]["arguments"][pos.arguments[w]].push(pos.id_etudiant);
+            this.selectargument[pos.id_option][pos.arguments[w]]["student"].push(pos.id_etudiant)
           }
         }
 
       }
     }
+    console.log(this.selectargument)
   }
 
 
@@ -426,7 +464,7 @@ export class RequestController {
 
     if (taille == -1 || this.request[taille]["type"] == "parentheseOuvre" || this.request[taille]["type"] == "operateur" || this.element_select.content["type"] == "choix") {
 
-     this.selectAllStudent("close")
+      this.selectAllStudent("close")
       var nom = choix + "." + option.nom + "." + raison;
       var objet = { label: nom, id: idoption, type: "choix", idparent: idchoix, critere: raison };
 
@@ -477,8 +515,8 @@ export class RequestController {
       }
       return
     }
-    if(this.request[flag]["type"] == "operateur"){
-     return
+    if (this.request[flag]["type"] == "operateur") {
+      return
     }
     if (flag > -1 || this.request[flag]["type"] == "valeur" || this.request[flag]["type"] == "parentheseFerme") {
       console.log("on passe ici")
@@ -673,7 +711,7 @@ export class RequestController {
       fin = this.typeOperator(tableau_pre_traitement, signe, value);
 
 
-     
+
       tableau_initial = this.doRequestAux(tableau_initial, this.request[i - 1]["label"], fin)
       console.log(tableau_initial)
     }
@@ -760,7 +798,7 @@ export class RequestController {
           tab.push(prop)
         }
       }
-      var obj = { label: "not assigned to " + namechoix, type: "choix", idchoix : idchoix, special: true, resultat: tab }
+      var obj = { label: "not assigned to " + namechoix, type: "choix", idchoix: idchoix, special: true, resultat: tab }
       this.request.push(obj)
       this.nonElement = false;
     }
@@ -787,7 +825,7 @@ export class RequestController {
       this.student[item.id]["type"] = item.type;
       item.type = element_delete;
       var label = ""
-      for (var i = 0 ; i<this.request.length;i++){
+      for (var i = 0; i < this.request.length; i++) {
         label = label + " " + this.request[i]["label"]
       }
       item.label = label
@@ -807,7 +845,7 @@ export class RequestController {
     tableau.splice(position, 1)
   }
 
-  playRequest(request){
+  playRequest(request) {
     console.log("on affiche la requete")
     console.log(request)
     this.request = request;
@@ -823,7 +861,7 @@ export class RequestController {
     var selectionnee = []
     var selectionsecond = []
     var erreur = ""
-    
+
 
     for (var person in this.awesomeStudent) {
       if (this.awesomeStudent[person]["select"]) {
@@ -852,7 +890,7 @@ export class RequestController {
         erreur = erreur + item.prenom + " " + item.nom + " is already assigned to this choice \n"
       }
     }
-    if (selectionsecond.length + attribue <= max_place && erreur =="") {
+    if (selectionsecond.length + attribue <= max_place && erreur == "") {
       console.log("on affiche erreur" + erreur)
       console.log(erreur.length)
       for (var person in selectionsecond) {
@@ -867,9 +905,9 @@ export class RequestController {
         affect.push(stp);
       }
     }
-    else if(selectionsecond.length + attribue >= max_place){
+    else if (selectionsecond.length + attribue >= max_place) {
       var place_restante = max_place - attribue
-      erreur = erreur  + selectionnee.length + " student(s) to be assigned and only " + place_restante + " free seat(s)"
+      erreur = erreur + selectionnee.length + " student(s) to be assigned and only " + place_restante + " free seat(s)"
     }
 
 
@@ -985,7 +1023,7 @@ export class RequestController {
 
   }
 
-  saveCsv = function () {
+  saveCSV = function () {
     console.log(this.consultation_id);
     var bla = "";
     // this.consultation_id = 1;
@@ -1044,13 +1082,13 @@ export class RequestController {
           break;
         case "choix":
           if (this.request[i]["special"] == true) {
-          var resultat = []
-      for (var prop in this.student) {
+            var resultat = []
+            for (var prop in this.student) {
 
-        if (this.student[prop]["type"].indexOf(this.request[i]["idchoix"]) > -1) {
-          resultat.push(prop)
-        }
-      }
+              if (this.student[prop]["type"].indexOf(this.request[i]["idchoix"]) > -1) {
+                resultat.push(prop)
+              }
+            }
           }
           else {
             var idparent = this.request[i]["idparent"];
@@ -1075,13 +1113,13 @@ export class RequestController {
   }
 
   doRequestNew(position) {
-    
+
 
     if (this.parse.length > 2) {
-      
+
       console.log(this.parse)
       var tab1 = this.parse[position];
-       console.log("tab1")
+      console.log("tab1")
       console.log(tab1)
       if (tab1 == "(") {
         this.parse.splice(position, 1)
@@ -1089,9 +1127,9 @@ export class RequestController {
         console.log("le nouveau tab est ")
         console.log(tab1)
       }
-     
+
       var op = this.parse[position + 1]
-         console.log("op")
+      console.log("op")
       console.log(op)
       if (op == ")") {
         this.parse.splice(position + 1, 1)
@@ -1100,9 +1138,9 @@ export class RequestController {
 
         return this.parse[position]
       }
-   
+
       var tab2 = this.parse[position + 2]
-       console.log("tab2")
+      console.log("tab2")
       console.log(tab2)
       if (tab2 == "(") {
         this.parse.splice(position + 2, 1)
@@ -1114,30 +1152,30 @@ export class RequestController {
         var tmp = this.doRequestAux(tab1, op, tab2)
         this.parse.splice(position, 3, tmp)
         console.log("on rappele la fonction")
-  return this.doRequestNew(position)
+        return this.doRequestNew(position)
       }
-      if(tab1 == undefined || tab2 == undefined || op == undefined){
+      if (tab1 == undefined || tab2 == undefined || op == undefined) {
         console.log("on passe ici parfois ? ")
         return this.parse[position]
       }
-      if(tab1 == undefined && tab2 == undefined && op == undefined){
+      if (tab1 == undefined && tab2 == undefined && op == undefined) {
         console.log("on passe dans le cas bizarre")
-        
+
       }
     }
-   else if(this.parse.length > 1){
-     return this.parse[0]
-   }
+    else if (this.parse.length > 1) {
+      return this.parse[0]
+    }
 
     console.log("tout fini")
-      console.log(this.parse)
-      this.affichageStudent(this.parse[0])
-    
+    console.log(this.parse)
+    this.affichageStudent(this.parse[0])
+
     if (this.request[this.request.length - 1]["label"] == "||" || this.nonElement == true) {
 
       this.choiceAllStudent();
     }
-    
+
   }
 
 
@@ -1147,68 +1185,68 @@ export class RequestController {
 
 
 
-  assistantBid(idchoix){
+  assistantBid(idchoix) {
     var liste_option = this.choice[idchoix]["option"];
     var message = "nous conseillons"
     var id_student = JSON.stringify(this.idAllStudent);
-        id_student = JSON.parse(id_student);
+    id_student = JSON.parse(id_student);
     var ref = {}
-    for(var prop in liste_option){
+    for (var prop in liste_option) {
       var restant = liste_option[prop]["max"] - this.countStudentAffect(liste_option[prop]["affect_real"])
       var tri = [];
-          for (var prop1 in liste_option[prop]["affect"]["bids"]) {
-            prop1 = Number(prop1)
-          tri.push(prop1)
-    }
-        tri.sort(function (a, b) {
+      for (var prop1 in liste_option[prop]["affect"]["bids"]) {
+        prop1 = Number(prop1)
+        tri.push(prop1)
+      }
+      tri.sort(function (a, b) {
         return b - a;
       });
-      var obj = {ordre_bid : tri , place : restant, position : 0,util : true}
-      ref[prop] = obj  
+      var obj = { ordre_bid: tri, place: restant, position: 0, util: true }
+      ref[prop] = obj
     }
-  /*  console.log(ref)
-
-    var score = 0
-    var gagnant = ""
-    for(var prop in ref){
-      var place = ref[prop]["position"]
-      if(score < ref[prop]["ordre_bid"][place]){
-        score = ref[prop]["ordre_bid"][place]
-        gagnant = prop
+    /*  console.log(ref)
+  
+      var score = 0
+      var gagnant = ""
+      for(var prop in ref){
+        var place = ref[prop]["position"]
+        if(score < ref[prop]["ordre_bid"][place]){
+          score = ref[prop]["ordre_bid"][place]
+          gagnant = prop
+        }
       }
-    }
-    console.log(score)
-    console.log(gagnant)
+      console.log(score)
+      console.log(gagnant)
+  
+      ref[gagnant]["ordre_bid"][]
+  */
+    for (var prop in ref) {
+      var ensemble_valeur = ref[prop]["ordre_bid"]
+      console.log(ensemble_valeur)
+      for (var i = 0; i < ensemble_valeur.length; i++) {
+        var ensemble_etudiant = liste_option[prop]["affect"]["bids"][ensemble_valeur[i]]
+        console.log("pour l option " + prop + " a la valeur " + ensemble_valeur[i])
+        console.log(ensemble_etudiant)
 
-    ref[gagnant]["ordre_bid"][]
-*/
-  for(var prop in ref){
-    var ensemble_valeur = ref[prop]["ordre_bid"]
-    console.log(ensemble_valeur)
-    for(var i = 0; i< ensemble_valeur.length;i++){
-    var ensemble_etudiant = liste_option[prop]["affect"]["bids"][ensemble_valeur[i]]
-    console.log("pour l option " + prop + " a la valeur " + ensemble_valeur[i])
-    console.log(ensemble_etudiant)
+        for (var j = 0; j < ensemble_etudiant.length; j++) {
+          var tableau_temporaire = []
+          if (id_student.indexOf(ensemble_etudiant[j]) > -1) {
+            for (var prop2 in liste_option) {
+              if (prop2 == prop) {
 
-    for(var j = 0; j<ensemble_etudiant.length; j++){
-      var tableau_temporaire = []
-      if(id_student.indexOf(ensemble_etudiant[j])> -1){
-        for(var prop2 in liste_option){
-          if(prop2 == prop){
-
-          }
-          else{
-            console.log("proposition 2 " + prop2 + "proposition 1"+ prop)
+              }
+              else {
+                console.log("proposition 2 " + prop2 + "proposition 1" + prop)
+              }
+            }
           }
         }
       }
-    }
-    }
-   
-  }
 
-  
-  console.log(this.student)
+    }
+
+
+    console.log(this.student)
 
   }
 
@@ -1227,6 +1265,27 @@ export class RequestController {
 
     this.awesomeStudent = tab;
   }
+
+  tooltipStudent(option, args, type) {
+    if (type != "arguments") {
+      return
+    }
+
+    var tableau = this.selectargument[option][args]["student"]
+
+
+    var res = "";
+    for (var i = 0; i < tableau.length; i++) {
+      if (i == 0) {
+        res = res + this.student[tableau[i]]["prenom"] + " " + this.student[tableau[i]]["nom"]
+      }
+      else {
+        res = res + "/ " + this.student[tableau[i]]["prenom"] + " " + this.student[tableau[i]]["nom"]
+      }
+    }
+    return res
+  }
+
 }
 
 
